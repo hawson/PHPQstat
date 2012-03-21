@@ -16,7 +16,7 @@
 $owner  = $_GET['owner'];
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
-      <tr><td CLASS=\"bottom\" align=center><a href='index.php'>Home</a> *  <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  <a href=\"qstat?owner=$owner\">Queue status</a> * <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * <a href=\"about.php?owner=$owner\">About PHPQstat</a></td></tr>";
+      <tr><td CLASS=\"bottom\" align=center><a href='index.php'>Home</a> *  <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  <a href=\"qstat.php?owner=$owner\">Queue status</a> * <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * <a href=\"about.php?owner=$owner\">About PHPQstat</a></td></tr>";
 ?>
     <tr>
       <td>
@@ -139,6 +139,7 @@ echo "          <tr>
 		<a href="#" onclick="changeIt('img/hour.png')">hour</a> - 
 		<a href="#" onclick="changeIt('img/day.png')">day</a> - 
 		<a href="#" onclick="changeIt('img/week.png')">week</a> - 
+		<a href="#" onclick="changeIt('img/2week.png')">2-week</a> - 
 		<a href="#" onclick="changeIt('img/month.png')">month</a> - 
 		<a href="#" onclick="changeIt('img/year.png')">year</a></td></tr>
 		<tr><td>
