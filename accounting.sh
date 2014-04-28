@@ -85,12 +85,11 @@ for q in $QUEUES; do
 done
 
 # Queue Waiting
- datagrups="$datagrups DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:slots-qw:AVERAGE LINE1:slots-qw#${COLOR[${i}]}:slots-qw"
- datagrups="$datagrups GPRINT:slots-qw:MIN:%12.0lf%s"
- datagrups="$datagrups GPRINT:slots-qw:MAX:%4.0lf%s"
- datagrups="$datagrups GPRINT:slots-qw:AVERAGE:%4.0lf%s"
- datagrups="$datagrups GPRINT:slots-qw:LAST:%4.0lf%s\\l"
-
+datagrups="$datagrups DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:slots-qw:AVERAGE LINE2:slots-qw#F00:slots-qw"
+datagrups="$datagrups GPRINT:slots-qw:MIN:%12.0lf%s"
+datagrups="$datagrups GPRINT:slots-qw:MAX:%4.0lf%s"
+datagrups="$datagrups GPRINT:slots-qw:AVERAGE:%4.0lf%s"
+datagrups="$datagrups GPRINT:slots-qw:LAST:%4.0lf%s\\l"
 
 
 
