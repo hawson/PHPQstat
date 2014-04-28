@@ -26,11 +26,11 @@ creabbdd="DS:slots-qw:GAUGE:1000000:0:999995000 "
 ######################
 i=0 
 for q in $QUEUES; do
-# NOTE <---------------------------------------------------------------------
-# If your Queues don't have the .q extension, you can comment the follow line
-qname="${q}${QEXT}"
-data="N"
-    cpusused=$(qstat -u '*' -q $qname | gawk '{if ($5 !~ /qw/){sum=sum+$9}}END{print sum}')
+    # NOTE <---------------------------------------------------------------------
+    # If your Queues don't have the .q extension, you can comment the follow line
+    qname="${q}${QEXT}"
+    data="N"
+    cpusused=$(qstat -u *, -q $qname | gawk '{if ($5 !~ /qw/){sum=sum+$9}}END{print sum}')
     cpuslimit=${CLIMIT[${i}]}
     if [ -z $cputime ] ; then cputime=0; fi
     if [ -z $cpusused ] ; then cpusused=0; fi
@@ -41,11 +41,11 @@ data="N"
 done
 
 # Queue Waiting
-    data="N"
-    cpusqw=$(qstat -u *, | gawk '{if ($5 ~ /qw/){sum=sum+$NF}}END{if (sum >0){ print sum}else{print 0}}')
-    data="$data:$cpusqw"
-    rrdupdate $RRD_ROOT/qacct_qw.rrd $data
-#    echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
+data="N"
+cpusqw=$(qstat -u *, | gawk '{if ($5 ~ /qw/){sum=sum+$NF}}END{if (sum >0){ print sum}else{print 0}}')
+data="$data:$cpusqw"
+rrdupdate $RRD_ROOT/qacct_qw.rrd $data
+echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
 
 
 # Creo la grafica

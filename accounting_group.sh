@@ -4,7 +4,6 @@
 #########################################
 source ./phpqstat.conf
 #########################################
-source $SGE_ROOT/$SGE_CELL/common/settings.sh 
 
 if [ -d $RRD_ROOT ]; then mkdir -p $RRD_ROOT; fi
 
