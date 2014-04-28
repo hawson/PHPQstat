@@ -25,12 +25,18 @@ creabbdd="DS:slots-qw:GAUGE:1000000:0:999995000 "
 # Actualitzo la BBDD
 ######################
 i=0 
+
+
+# Queue counts
+QSTAT_SUMMARY=/tmp/queue_output
+qstat -g c > $QSTAT_SUMMARY
+
 for q in $QUEUES; do
     # NOTE <---------------------------------------------------------------------
     # If your Queues don't have the .q extension, you can comment the follow line
     qname="${q}${QEXT}"
     data="N"
-    cpusused=$(qstat -u *, -q $qname | gawk '{if ($5 !~ /qw/){sum=sum+$9}}END{print sum}')
+    cpusused=$(gawk "/^$qname /{print \$3}" $QSTAT_SUMMARY)
     cpuslimit=${CLIMIT[${i}]}
     if [ -z $cputime ] ; then cputime=0; fi
     if [ -z $cpusused ] ; then cpusused=0; fi
@@ -40,9 +46,14 @@ for q in $QUEUES; do
     i=$((i+1))
 done
 
+rm -f $QSTAT_SUMMARY
+
 # Queue Waiting
 data="N"
-cpusqw=$(qstat -u *, | gawk '{if ($5 ~ /qw/){sum=sum+$NF}}END{if (sum >0){ print sum}else{print 0}}')
+cpusqw=$(qstat -u * -s p | wc -l)
+if [[ $cpusqs -gt 2 ]]; then 
+    cpusqw=$(($cpusqs-2))  # to remote the header lines.
+fi
 data="$data:$cpusqw"
 rrdupdate $RRD_ROOT/qacct_qw.rrd $data
 echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
