@@ -73,11 +73,15 @@ done
 
 i=0 
 for q in $QUEUES; do
- datagrups="$datagrups LINE1:${q}-used#${COLOR[${i}]}:$q"
- pad=$((20-${#q}))
- datagrups="$datagrups GPRINT:${q}-min:%${pad}.0lf   GPRINT:${q}-avg:%5.0lf    GPRINT:${q}-max:%5.0lf     GPRINT:${q}-last:%5.0lf\\l"
+    if [[ $STACKED ]]; then
+        datagrups="$datagrups AREA:${q}-used#${COLOR[${i}]}:$q:STACK"
+    else
+        datagrups="$datagrups LINE1:${q}-used#${COLOR[${i}]}:$q"
+    fi
+    pad=$((20-${#q}))
+    datagrups="$datagrups GPRINT:${q}-min:%${pad}.0lf   GPRINT:${q}-avg:%5.0lf    GPRINT:${q}-max:%5.0lf     GPRINT:${q}-last:%5.0lf\\l"
 
- i=$((i+1))
+    i=$((i+1))
 done
 
 # Queue Waiting
