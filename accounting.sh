@@ -50,13 +50,13 @@ rm -f $QSTAT_SUMMARY
 
 # Queue Waiting
 data="N"
-cpusqw=$(qstat -u * -s p | wc -l)
+cpusqw=$(qstat -u '*' -s p | wc -l)
 if [[ $cpusqs -gt 2 ]]; then 
     cpusqw=$(($cpusqs-2))  # to remote the header lines.
 fi
 data="$data:$cpusqw"
 rrdupdate $RRD_ROOT/qacct_qw.rrd $data
-echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
+#echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
 
 
 # Creo la grafica
