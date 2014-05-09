@@ -143,7 +143,7 @@ echo "          <tr>
 		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/qw_month.png','qw_rta');">month</a> - 
 		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/qw_year.png','qw_rta');">year</a></td></tr>
 		<tr><td>
-		<img src="img/hour.png" id='rta' border='0'></td></tr>
+		<img src="img/day.png" id='rta' border='0'></td></tr>
 	</tbody>
 	</table>
 <br>
@@ -157,7 +157,7 @@ echo "          <tr>
 		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/qw_month.png','qw_rta');">month</a> - 
 		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/qw_year.png','qw_rta');">year</a></td></tr>
 		<tr><td>
-		<img src="img/qw_hour.png" id='qw_rta' border='0'></td></tr>
+		<img src="img/qw_day.png" id='qw_rta' border='0'></td></tr>
 	</tbody>
 	</table>
 <br>
