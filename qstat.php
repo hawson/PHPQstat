@@ -7,7 +7,7 @@
   <meta name="KEYWORDS" content="gridengine sge sun hpc supercomputing batch queue linux xml qstat qhost jordi blasco solnu">
   <link rel="stylesheet" href="phpqstat.css" type="text/css" /> 
 <script type="text/javascript">
-  function changeIt(view){document.getElementById('rta').src= view;}
+  function changeIt(view,target){document.getElementById(target).src= view;}
 </script>
 </head>
 <body>
