@@ -56,7 +56,7 @@ if [[ $cpusqs -gt 2 ]]; then
 fi
 data="$data:$cpusqw"
 rrdupdate $RRD_ROOT/qacct_qw.rrd $data
-#echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
+echo "rrdupdate $RRD_ROOT/qacct_qw.rrd $data"
 
 
 # Creo la grafica
@@ -85,11 +85,14 @@ for q in $QUEUES; do
 done
 
 # Queue Waiting
-datagrups="$datagrups DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:slots-qw:AVERAGE LINE2:slots-qw#F00:slots-qw"
-datagrups="$datagrups GPRINT:slots-qw:MIN:%12.0lf%s"
-datagrups="$datagrups GPRINT:slots-qw:MAX:%4.0lf%s"
-datagrups="$datagrups GPRINT:slots-qw:AVERAGE:%4.0lf%s"
-datagrups="$datagrups GPRINT:slots-qw:LAST:%4.0lf%s\\l"
+SHOWPENDING=
+if [[ -n "$SHOWPENDING" ]]; then
+    datagrups="$datagrups DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:slots-qw:AVERAGE LINE2:slots-qw#F00:slots-qw"
+    datagrups="$datagrups GPRINT:slots-qw:MIN:%12.0lf%s"
+    datagrups="$datagrups GPRINT:slots-qw:MAX:%4.0lf%s"
+    datagrups="$datagrups GPRINT:slots-qw:AVERAGE:%4.0lf%s"
+    datagrups="$datagrups GPRINT:slots-qw:LAST:%4.0lf%s\\l"
+fi
 
 
 
