@@ -96,12 +96,12 @@ fi
 
 
 
-rrdtool graph $WEB_ROOT/img/hour.png  -a PNG -s -1hour  -t "Running Jobs (hourly)"  -h 200 -w 600 -v "Used CPU's" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/day.png   -a PNG -s -1day   -t "Running Jobs (daily)"   -h 200 -w 600 -v "Used CPU's" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/week.png  -a PNG -s -1week  -t "Running Jobs (Weekly)"  -h 200 -w 600 -v "Used CPU's" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/2week.png  -a PNG -s -2week  -t "Running Jobs (Weekly)"  -h 200 -w 600 -v "Used CPU's" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/month.png -a PNG -s -1month -t "Running Jobs (Monthly)" -h 200 -w 600 -v "Used CPU's" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/year.png  -a PNG -s -1year  -t "Running Jobs (Yearly)"  -h 200 -w 600 -v "Used CPU's" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/hour.png  -a PNG -s -1hour  -t "Running Jobs (hourly)"  -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/day.png   -a PNG -s -1day   -t "Running Jobs (daily)"   -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/week.png  -a PNG -s -1week  -t "Running Jobs (Weekly)"  -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/2week.png  -a PNG -s -2week  -t "Running Jobs (Weekly)"  -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/month.png -a PNG -s -1month -t "Running Jobs (Monthly)" -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/year.png  -a PNG -s -1year  -t "Running Jobs (Yearly)"  -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
 
 rrdtool graph $WEB_ROOT/img/qw_hour.png  -a PNG -s -1hour  -t "Pending Jobs (hourly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
 rrdtool graph $WEB_ROOT/img/qw_day.png   -a PNG -s -1day   -t "Pending Jobs (daily)"   -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
