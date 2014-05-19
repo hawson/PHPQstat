@@ -14,7 +14,11 @@ for q in $QUEUES; do
 creabbdd=""
    if ! [ -f $RRD_ROOT/qacct_${q}.rrd ] ; then 
        creabbdd="${creabbdd}DS:${q}-used:GAUGE:1000000:0:999995000 "
-       rrdtool create $RRD_ROOT/qacct_${q}.rrd -s 180 $creabbdd RRA:AVERAGE:0.5:1:576
+       RRA='RRA:AVERAGE:0.5:1:960 '  # 2 days, primary data points
+       RRA+='RRA:AVERAGE:0.2:5:2976    RRA:MAX:0.2:5:2976    RRA:MIN:0.2:5:2976 '    # 31 days, 15 min bins
+       RRA+='RRA:AVERAGE:0.2:20:8784   RRA:MAX:0.2:20:8784   RRA:MIN:0.2:20:8784 '   # 1 year, hourly bins
+       RRA+='RRA:AVERAGE:0.1:480:1830  RRA:MAX:0.2:480:1830  RRA:MIN:0.2:480:1830 '  # 5 years, daily bins
+       rrdtool create $RRD_ROOT/qacct_${q}.rrd -s 180 $creabbdd $RRA
    fi
 done
 # Queue Waiting
