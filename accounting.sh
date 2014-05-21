@@ -8,22 +8,22 @@ source ./phpqstat.conf
 if ! [ -d $RRD_ROOT ]; then mkdir -p $RRD_ROOT; fi
 #QUEUES=$(qconf -sql | cut -d. -f1)
 
+
+# Defines for building rrd files.
+RRA=' RRA:AVERAGE:0.5:1:960 '  # 2 days, primary data points
+RRA+='RRA:AVERAGE:0.2:5:2976    RRA:MAX:0.2:5:2976    RRA:MIN:0.2:5:2976 '    # 31 days, 15 min bins
+RRA+='RRA:AVERAGE:0.2:20:8784   RRA:MAX:0.2:20:8784   RRA:MIN:0.2:20:8784 '   # 1 year, hourly bins
+RRA+='RRA:AVERAGE:0.1:480:1830  RRA:MAX:0.2:480:1830  RRA:MIN:0.2:480:1830 '  # 5 years, daily bins
+
 # Inici BBDD
 #################
-for q in $QUEUES; do
-creabbdd=""
-   if ! [ -f $RRD_ROOT/qacct_${q}.rrd ] ; then 
-       creabbdd="${creabbdd}DS:${q}-used:GAUGE:1000000:0:999995000 "
-       RRA='RRA:AVERAGE:0.5:1:960 '  # 2 days, primary data points
-       RRA+='RRA:AVERAGE:0.2:5:2976    RRA:MAX:0.2:5:2976    RRA:MIN:0.2:5:2976 '    # 31 days, 15 min bins
-       RRA+='RRA:AVERAGE:0.2:20:8784   RRA:MAX:0.2:20:8784   RRA:MIN:0.2:20:8784 '   # 1 year, hourly bins
-       RRA+='RRA:AVERAGE:0.1:480:1830  RRA:MAX:0.2:480:1830  RRA:MIN:0.2:480:1830 '  # 5 years, daily bins
-       rrdtool create $RRD_ROOT/qacct_${q}.rrd -s 180 $creabbdd $RRA
-   fi
+# the 'qw' rrd file can be considered a "queue" for this purpose
+for q in $QUEUES "qw" ; do
+    if ! [ -f $RRD_ROOT/qacct_${q}.rrd ] ; then 
+        creabbdd="DS:${q}-used:GAUGE:1000000:0:999995000 "
+        rrdtool create $RRD_ROOT/qacct_${q}.rrd -b -6y -s 180 $creabbdd $RRA
+    fi
 done
-# Queue Waiting
-creabbdd="DS:slots-qw:GAUGE:1000000:0:999995000 "
-[[ -f $RRD_ROOT/qacct_qw.rrd ]] || rrdtool create $RRD_ROOT/qacct_qw.rrd -s 180 $creabbdd RRA:AVERAGE:0.5:1:576
 
 
 # Actualitzo la BBDD
@@ -91,11 +91,12 @@ done
 # Queue Waiting
 SHOWPENDING=1
 if [[ -n "$SHOWPENDING" ]]; then
-    pending_datagrups="$pending_datagrups DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:slots-qw:AVERAGE LINE2:slots-qw#F00:slots-qw"
-    pending_datagrups="$pending_datagrups GPRINT:slots-qw:MIN:%12.0lf%s"
-    pending_datagrups="$pending_datagrups GPRINT:slots-qw:MAX:%4.0lf%s"
-    pending_datagrups="$pending_datagrups GPRINT:slots-qw:AVERAGE:%4.0lf%s"
-    pending_datagrups="$pending_datagrups GPRINT:slots-qw:LAST:%4.0lf%s\\l"
+    pending_datagrups_LINE="DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:qw-used:AVERAGE LINE2:slots-qw#F00:slots-qw"
+    pending_extrema="DEF:slots-qw-max=$RRD_ROOT/qacct_qw.rrd:qw-used:MAX DEF:slots-qw-min=$RRD_ROOT/qacct_qw.rrd:qw-used:MIN"
+    pending_status="GPRINT:slots-qw:MIN:%12.0lf%s "
+    pending_status+="GPRINT:slots-qw:MAX:%4.0lf%s "
+    pending_status+="GPRINT:slots-qw:AVERAGE:%4.0lf%s "
+    pending_status+="GPRINT:slots-qw:LAST:%4.0lf%s\\l"
 fi
 
 
@@ -107,9 +108,10 @@ rrdtool graph $WEB_ROOT/img/2week.png -a PNG -s -2week  -t "Running Jobs (Weekly
 rrdtool graph $WEB_ROOT/img/month.png -a PNG -s -1month -t "Running Jobs (Monthly)" -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
 rrdtool graph $WEB_ROOT/img/year.png  -a PNG -s -1year  -t "Running Jobs (Yearly)"  -h 200 -w 600 -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
 
-rrdtool graph $WEB_ROOT/img/qw_hour.png  -a PNG -s -1hour  -t "Pending Jobs (hourly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_day.png   -a PNG -s -1day   -t "Pending Jobs (daily)"   -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_week.png  -a PNG -s -1week  -t "Pending Jobs (Weekly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_2week.png -a PNG -s -2week  -t "Pending Jobs (Weekly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_month.png -a PNG -s -1month -t "Pending Jobs (Monthly)" -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_year.png  -a PNG -s -1year  -t "Pending Jobs (Yearly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_hour.png  -a PNG -s -1hour  -t "Pending Jobs (hourly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_day.png   -a PNG -s -1day   -t "Pending Jobs (daily)"   -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_week.png  -a PNG -s -1week  -t "Pending Jobs (Weekly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_2week.png -a PNG -s -2week  -t "Pending Jobs (Weekly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_month.png -a PNG -s -1month -t "Pending Jobs (Monthly)" -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_year.png  -a PNG -s -1year  -t "Pending Jobs (Yearly)"  -h 200 -w 600 -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+
