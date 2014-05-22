@@ -99,15 +99,23 @@ if [[ -n "$SHOWPENDING" ]]; then
     pending_status+="GPRINT:slots-qw:LAST:%4.0lf%s\\l"
 fi
 
-STD_OPTS='-a PNG -h 200 -w 600 -o -z'
+STD_OPTS='-a PNG -h 200 -w 600'
+MAXRULE=1500
+RULE="HRULE:$MAXRULE#000::dashes"
 
+rrdtool graph $WEB_ROOT/img/hour.png  $STD_OPTS -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/day.png   $STD_OPTS -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/week.png  $STD_OPTS -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/2week.png $STD_OPTS -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/month.png $STD_OPTS -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/year.png  $STD_OPTS -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
 
-rrdtool graph $WEB_ROOT/img/hour.png  $STD_OPTS -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/day.png   $STD_OPTS -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/week.png  $STD_OPTS -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/2week.png $STD_OPTS -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/month.png $STD_OPTS -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/year.png  $STD_OPTS -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_hour.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_day.png   $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_week.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_2week.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_month.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_year.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
 
 rrdtool graph $WEB_ROOT/img/qw_hour.png  $STD_OPTS -s -1hour  -t "Pending Jobs (hourly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
 rrdtool graph $WEB_ROOT/img/qw_day.png   $STD_OPTS -s -1day   -t "Pending Jobs (daily)"   -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_extrema $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
