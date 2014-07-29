@@ -93,8 +93,8 @@ SHOWPENDING=1
 if [[ -n "$SHOWPENDING" ]]; then
     pending_datagrups_LINE="DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:qw-used:AVERAGE LINE2:slots-qw#F00:slots-qw"
     pending_status="GPRINT:slots-qw:MIN:%12.0lf%s "
-    pending_status+="GPRINT:slots-qw:MAX:%4.0lf%s "
     pending_status+="GPRINT:slots-qw:AVERAGE:%4.0lf%s "
+    pending_status+="GPRINT:slots-qw:MAX:%4.0lf%s "
     pending_status+="GPRINT:slots-qw:LAST:%4.0lf%s\\l"
 fi
 
@@ -102,26 +102,26 @@ STD_OPTS='-a PNG -h 200 -w 600'
 MAXRULE=1500
 RULE="HRULE:$MAXRULE#000::dashes"
 
-rrdtool graph $WEB_ROOT/img/hour.png  $STD_OPTS -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/day.png   $STD_OPTS -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/week.png  $STD_OPTS -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/2week.png $STD_OPTS -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/month.png $STD_OPTS -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/year.png  $STD_OPTS -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/hour.png  $STD_OPTS -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/day.png   $STD_OPTS -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/week.png  $STD_OPTS -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/2week.png $STD_OPTS -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/month.png $STD_OPTS -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/year.png  $STD_OPTS -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   $RULE  COMMENT:"Last update\: $DATE" 
 
-rrdtool graph $WEB_ROOT/img/sm_hour.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/sm_day.png   $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/sm_week.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/sm_2week.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/sm_month.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/sm_year.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_hour.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1hour  -t "Running Jobs (hourly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_day.png   $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1day   -t "Running Jobs (daily)"   -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_week.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_2week.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -2week  -t "Running Jobs (Weekly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_month.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1month -t "Running Jobs (Monthly)" -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/sm_year.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
 
-rrdtool graph $WEB_ROOT/img/qw_hour.png  $STD_OPTS -s -1hour  -t "Pending Jobs (hourly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_day.png   $STD_OPTS -s -1day   -t "Pending Jobs (daily)"   -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_week.png  $STD_OPTS -s -1week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_2week.png $STD_OPTS -s -2week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_month.png $STD_OPTS -s -1month -t "Pending Jobs (Monthly)" -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_year.png  $STD_OPTS -s -1year  -t "Pending Jobs (Yearly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_hour.png  $STD_OPTS -s -1hour  -t "Pending Jobs (hourly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_day.png   $STD_OPTS -s -1day   -t "Pending Jobs (daily)"   -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_week.png  $STD_OPTS -s -1week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_2week.png $STD_OPTS -s -2week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_month.png $STD_OPTS -s -1month -t "Pending Jobs (Monthly)" -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_year.png  $STD_OPTS -s -1year  -t "Pending Jobs (Yearly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
 
 
 
@@ -136,20 +136,20 @@ for f in $RRD_ROOT/*_quota*.rrd; do
     QUOTA=${QUOTA/_limit.rrd/};
     QUOTAS="$QUOTA $QUOTAS"
     DEF="$quotagroups DEF:${QUOTA}-used=$RRD_ROOT/$FILE:used:AVERAGE DEF:${QUOTA}-avail=$RRD_ROOT/$FILE:avail:AVERAGE "
-    VDEF="VDEF:${QUOTA}-min=${QUOTA}-used,MINIMUM    VDEF:${QUOTA}-max=${QUOTA}-used,MAXIMUM   VDEF:${QUOTA}-avg=${QUOTA}-used,AVERAGE    VDEF:${QUOTA}-last=${QUOTA}-used,LAST"
+    VDEF="VDEF:${QUOTA}-min=${QUOTA}-used,MINIMUM    VDEF:${QUOTA}-avg=${QUOTA}-used,AVERAGE    VDEF:${QUOTA}-max=${QUOTA}-used,MAXIMUM   VDEF:${QUOTA}-last=${QUOTA}-used,LAST"
     LINE="LINE1:${QUOTA}-used#${COLOR[${i}]}:$QUOTA   LINE1:${QUOTA}-avail#${COLOR[${i}]}:"":dashes=3"
     pad=$((20-${#QUOTA}))
-    STATS="GPRINT:${QUOTA}-min:%${pad}.0lf GPRINT:${QUOTA}-max:%5.0lf GPRINT:${QUOTA}-avg:%5.0lf GPRINT:${QUOTA}-last:%5.0lf\\l" 
+    STATS="GPRINT:${QUOTA}-min:%${pad}.0lf GPRINT:${QUOTA}-avg:%5.0lf GPRINT:${QUOTA}-max:%5.0lf GPRINT:${QUOTA}-last:%5.0lf\\l" 
     quotagroups="$DEF $VDEF $LINE $STATS  "
     i=$((i+1))
 done
 
 RULE=""
 
-rrdtool graph $WEB_ROOT/img/quota_hour.png  $STD_OPTS -s -1hour  -t "Jobs by Quota (hourly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/quota_day.png   $STD_OPTS -s -1day   -t "Jobs by Quota (daily)"   -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/quota_week.png  $STD_OPTS -s -1week  -t "Jobs by Quota (Weekly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/quota_2week.png $STD_OPTS -s -2week  -t "Jobs by Quota (Weekly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/quota_month.png $STD_OPTS -s -1month -t "Jobs by Quota (Monthly)" -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/quota_year.png  $STD_OPTS -s -1year  -t "Jobs by Quota (Yearly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/quota_hour.png  $STD_OPTS -s -1hour  -t "Jobs by Quota (hourly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/quota_day.png   $STD_OPTS -s -1day   -t "Jobs by Quota (daily)"   -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/quota_week.png  $STD_OPTS -s -1week  -t "Jobs by Quota (Weekly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/quota_2week.png $STD_OPTS -s -2week  -t "Jobs by Quota (Weekly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/quota_month.png $STD_OPTS -s -1month -t "Jobs by Quota (Monthly)" -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/quota_year.png  $STD_OPTS -s -1year  -t "Jobs by Quota (Yearly)"  -v "Jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Avg"  COMMENT:"  Max" COMMENT:" Last\\l"   $quotagroups  $LINES  $RULE  COMMENT:"Last update\: $DATE" 
 
