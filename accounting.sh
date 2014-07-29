@@ -92,7 +92,6 @@ done
 SHOWPENDING=1
 if [[ -n "$SHOWPENDING" ]]; then
     pending_datagrups_LINE="DEF:slots-qw=$RRD_ROOT/qacct_qw.rrd:qw-used:AVERAGE LINE2:slots-qw#F00:slots-qw"
-    pending_extrema="DEF:slots-qw-max=$RRD_ROOT/qacct_qw.rrd:qw-used:MAX   DEF:slots-qw-min=$RRD_ROOT/qacct_qw.rrd:qw-used:MIN  LINE1:slots-qw-max#F55 AREA:slots-qw-max#FAA  AREA:slots-qw-min#FFF LINE1:slots-qw-min#F55"
     pending_status="GPRINT:slots-qw:MIN:%12.0lf%s "
     pending_status+="GPRINT:slots-qw:MAX:%4.0lf%s "
     pending_status+="GPRINT:slots-qw:AVERAGE:%4.0lf%s "
@@ -118,11 +117,11 @@ rrdtool graph $WEB_ROOT/img/sm_month.png $STD_OPTS -g -h 150 -u $MAXRULE --rigid
 rrdtool graph $WEB_ROOT/img/sm_year.png  $STD_OPTS -g -h 150 -u $MAXRULE --rigid -s -1year  -t "Running Jobs (Yearly)"  -v "Used CPUs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $datagrups   COMMENT:"Last update\: $DATE" 
 
 rrdtool graph $WEB_ROOT/img/qw_hour.png  $STD_OPTS -s -1hour  -t "Pending Jobs (hourly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_day.png   $STD_OPTS -s -1day   -t "Pending Jobs (daily)"   -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_extrema $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_week.png  $STD_OPTS -s -1week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_extrema $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_2week.png $STD_OPTS -s -2week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_extrema $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_month.png $STD_OPTS -s -1month -t "Pending Jobs (Monthly)" -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_extrema $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
-rrdtool graph $WEB_ROOT/img/qw_year.png  $STD_OPTS -s -1year  -t "Pending Jobs (Yearly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_extrema $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_day.png   $STD_OPTS -s -1day   -t "Pending Jobs (daily)"   -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_week.png  $STD_OPTS -s -1week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_2week.png $STD_OPTS -s -2week  -t "Pending Jobs (Weekly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_month.png $STD_OPTS -s -1month -t "Pending Jobs (Monthly)" -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
+rrdtool graph $WEB_ROOT/img/qw_year.png  $STD_OPTS -s -1year  -t "Pending Jobs (Yearly)"  -v "Queued jobs" COMMENT:'                    ' COMMENT:"Min"  COMMENT:" Max"  COMMENT:"  Avg" COMMENT:" Last\\l"   $pending_datagrups_LINE $pending_status  COMMENT:"Last update\: $DATE" 
 
 
 
