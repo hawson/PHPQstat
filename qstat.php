@@ -43,6 +43,10 @@ function make_seed() {
   return (float) $sec + ((float) $usec * 100000);
 }
 
+# set to 1 to speed up testing (And using stale data in the tables at
+# the beginning.  Charts should be current)
+$cache = 1;
+
 srand(make_seed());
 
 $alfa = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
@@ -51,12 +55,24 @@ for($i = 0; $i < $password_length; $i ++) {
   $token .= $alfa[rand(0, strlen($alfa))];
 }
 
-$out = exec("./gexml -u all -R -o /tmp/$token.xml");
+if ($cache) {
+    $token="testtoken";
+}
+
+$tokenfile1 = "/tmp/$token-1.xml";
+$tokenfile2 = "/tmp/$token-2.xml";
+
+
+if (!file_exists($tokenfile1) || !$cache ) {
+    $out = exec("./gexml -u all -R -o $tokenfile1");
+}
 
 //printf("System Output: $out\n"); 
-$qstat = simplexml_load_file("/tmp/$token.xml");
+$qstat = simplexml_load_file($tokenfile1);
 
-//$qstat = simplexml_load_file("/home/xadmin/phpqstat/qstat_user.xml");
+if (!$cache) {
+    unlink($tokenfile1);
+}
 
 foreach ($qstat->xpath('//cluster_queue_summary') as $cluster_queue_summary) {
 echo "                <tr>
@@ -70,7 +86,6 @@ echo "                <tr>
                 <td>$cluster_queue_summary->manual_intervention</td>
                 </tr>";
 }
-exec("rm /tmp/$token.xml");
 
 echo "                </tbody>
 	</table>
@@ -86,14 +101,22 @@ echo "                </tbody>
 
 ";
 
-$out2 = exec("./gexml -u all -o /tmp/$token.xml");
-$jobs = simplexml_load_file("/tmp/$token.xml");
+if (!$cache || !file_exists($tokenfile2)) {
+    $out2 = exec("./gexml -u all -o $tokenfile2");
+}
+$jobs = simplexml_load_file($tokenfile2);
+
+if (!$cache) {
+    unlink($tokenfile2);
+}
+
 $nrun=0;
 $srun=0;
 $npen=0;
 $spen=0;
 $nzom=0;
 $szom=0;
+
 foreach ($jobs->xpath('//job_list') as $job_list) {
 $jobstatus=$job_list['state'];
 
@@ -127,7 +150,6 @@ echo "          <tr>
                 </tr>
 ";
 
-//exec("rm /tmp/$token.xml");
 ?>
 
 	  </tbody>
@@ -136,12 +158,12 @@ echo "          <tr>
 	<table align=center border="1" cellpadding="0" cellspacing="0">
         <tbody>
 		<tr class="header"><td align="center">Real-time Accounting of Running Jobs: 
-		<a href="#" onclick="changeIt('img/hour.png','rta');  changeIt('img/sm_hour.png','sm_rta');  changeIt('img/qw_hour.png','qw_rta');  changeIt('img/quota_hour.png','qw_rta');">hour</a> - 
-		<a href="#" onclick="changeIt('img/day.png','rta');   changeIt('img/sm_day.png','sm_rta');   changeIt('img/qw_day.png','qw_rta');   changeIt('img/quota_day.png','qw_rta');">day</a> - 
-		<a href="#" onclick="changeIt('img/week.png','rta');  changeIt('img/sm_week.png','sm_rta');  changeIt('img/qw_week.png','qw_rta');  changeIt('img/quota_week.png','qw_rta');">week</a> - 
-		<a href="#" onclick="changeIt('img/2week.png','rta'); changeIt('img/sm_2week.png','sm_rta'); changeIt('img/qw_2week.png','qw_rta'); changeIt('img/quota_2week.png','qw_rta');">2-week</a> - 
-		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/sm_month.png','sm_rta'); changeIt('img/qw_month.png','qw_rta'); changeIt('img/quota_month.png','qw_rta');">month</a> - 
-		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/sm_year.png','sm_rta');  changeIt('img/qw_year.png','qw_rta');  changeIt('img/quota_year.png','qw_rta');">year</a></td></tr>
+		<a href="#" onclick="changeIt('img/hour.png','rta');  changeIt('img/sm_hour.png','sm_rta');  changeIt('img/qw_hour.png','qw_rta');  changeIt('img/quota_hour.png','quota_rta');">hour</a> - 
+		<a href="#" onclick="changeIt('img/day.png','rta');   changeIt('img/sm_day.png','sm_rta');   changeIt('img/qw_day.png','qw_rta');   changeIt('img/quota_day.png','quota_rta');">day</a> - 
+		<a href="#" onclick="changeIt('img/week.png','rta');  changeIt('img/sm_week.png','sm_rta');  changeIt('img/qw_week.png','qw_rta');  changeIt('img/quota_week.png','quota_rta');">week</a> - 
+		<a href="#" onclick="changeIt('img/2week.png','rta'); changeIt('img/sm_2week.png','sm_rta'); changeIt('img/qw_2week.png','qw_rta'); changeIt('img/quota_2week.png','quota_rta');">2-week</a> - 
+		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/sm_month.png','sm_rta'); changeIt('img/qw_month.png','qw_rta'); changeIt('img/quota_month.png','quota_rta');">month</a> - 
+		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/sm_year.png','sm_rta');  changeIt('img/qw_year.png','qw_rta');  changeIt('img/quota_year.png','quota_rta');">year</a></td></tr>
 		<tr><td>
 		<img src="img/day.png" id='rta' border='0'></td></tr>
 	</tbody>
