@@ -10,7 +10,7 @@ my $QCONF = '/netopt/uge/bin/lx-amd64/qconf';
 my $QQUOTA = '/netopt/uge/bin/lx-amd64/qquota';
 my $config_file = './phpqstat.conf';  # simple key/value pairs
 
-my $verbose = 1;
+my $verbose = 0;
 
 # template fields are: department, state.
 my $DS_tmpl = 'DS:prj-%s-%s:GAUGE:1000000:0:999995000 ';
@@ -68,10 +68,10 @@ sub insert_data {
         print STDERR "Prj=$project\n" if $verbose;
         my $file = "$rrd_root/qacct_prj_$project.rrd";
         if ( ! -f $file ) {
-            print STDERR "Creating [$file].\n" ;
+            print STDERR "Creating [$file].\n" if $verbose;
             create_rrd($project,$file);
         } else {
-            print STDERR "[$file] already exists.\n" ;
+            print STDERR "[$file] already exists.\n" if $verbose;
         }
 
         my $cmd = sprintf 'rrdtool update %s -t running:pending N:%d:%d', $file, @{$p_r->{$project}};
@@ -101,7 +101,7 @@ sub get_data {
     my ($qstat, @projects) = @_;
     my %counts;
 
-    print STDERR "Getting data...\n";
+    print STDERR "Getting data...\n" if $verbose;
     
 # beckerje@systemsutils:~/PHPQstat (master)$ qstat -ext|head
 # job-ID  prior   ntckts  name       user         project          department state cpu        mem     io      tckts ovrts otckt ftckt stckt share queue                          jclass                         slots ja-task-ID
@@ -120,7 +120,7 @@ sub get_data {
         my @line = split (' ', $line);
         my ($user, $project, $dept, $state) = @line[4..8];
 
-        print "$user, $project, $dept, $state\n";
+        print "$user, $project, $dept, $state\n" if $verbose;
 
         my $idx = $state =~ /qw/ ? 1 : 0;
         $counts{$project}[$idx]++;
@@ -132,7 +132,7 @@ sub get_data {
         }
     }
 
-    close QSTAT;
+    close $QSTAT;
     return %counts;
 }
 #---------------------------------------------------------
