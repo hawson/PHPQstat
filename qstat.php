@@ -118,7 +118,7 @@ $nzom=0;
 $szom=0;
 
 foreach ($jobs->xpath('//job_list') as $job_list) {
-$jobstatus=$job_list['state'];
+    $jobstatus=$job_list['state'];
 
 	if ($jobstatus == "running"){
 		$nrun++;
@@ -154,62 +154,56 @@ echo "          <tr>
 
 	  </tbody>
 	</table>
-<br>
+
+
+<?php
+$mapping = array(
+    'rta'       => '',
+    'sm_rta'    => 'sm_',
+    'qw_rta'    => 'qw_',
+    'quota_rta' => 'quota_',
+    'prj_rta'   => 'prj_',
+);
+
+$descr = array(
+    'rta'       => 'Running Jobs:',
+    'sm_rta'    => 'Running Jobs (low counts):',
+    'qw_rta'    => 'Pending Jobs:',
+    'quota_rta' => 'jobs by Quota:',
+    'prj_rta'   => 'jobs by Project:',
+);
+
+$times = array(
+    'hour',
+    'day',
+    'week',
+    '2week',
+    'month',
+    'year',
+);
+
+
+foreach (array_keys($mapping) as $key) {
+    echo '<br>
 	<table align=center border="1" cellpadding="0" cellspacing="0">
-        <tbody>
-		<tr class="header"><td align="center">Real-time Accounting of Running Jobs: 
-		<a href="#" onclick="changeIt('img/hour.png','rta');  changeIt('img/sm_hour.png','sm_rta');  changeIt('img/qw_hour.png','qw_rta');  changeIt('img/quota_hour.png','quota_rta');">hour</a> - 
-		<a href="#" onclick="changeIt('img/day.png','rta');   changeIt('img/sm_day.png','sm_rta');   changeIt('img/qw_day.png','qw_rta');   changeIt('img/quota_day.png','quota_rta');">day</a> - 
-		<a href="#" onclick="changeIt('img/week.png','rta');  changeIt('img/sm_week.png','sm_rta');  changeIt('img/qw_week.png','qw_rta');  changeIt('img/quota_week.png','quota_rta');">week</a> - 
-		<a href="#" onclick="changeIt('img/2week.png','rta'); changeIt('img/sm_2week.png','sm_rta'); changeIt('img/qw_2week.png','qw_rta'); changeIt('img/quota_2week.png','quota_rta');">2-week</a> - 
-		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/sm_month.png','sm_rta'); changeIt('img/qw_month.png','qw_rta'); changeIt('img/quota_month.png','quota_rta');">month</a> - 
-		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/sm_year.png','sm_rta');  changeIt('img/qw_year.png','qw_rta');  changeIt('img/quota_year.png','quota_rta');">year</a></td></tr>
-		<tr><td>
-		<img src="img/day.png" id='rta' border='0'></td></tr>
-	</tbody>
-	</table>
-<br>
-	<table align=center border="1" cellpadding="0" cellspacing="0">
-        <tbody>
-		<tr class="header"><td align="center">Real-time Accounting of Running Jobs (low counts):
-		<a href="#" onclick="changeIt('img/hour.png','rta');  changeIt('img/sm_hour.png','sm_rta');  changeIt('img/qw_hour.png','qw_rta');  changeIt('img/quota_hour.png','quota_rta');">hour</a> - 
-		<a href="#" onclick="changeIt('img/day.png','rta');   changeIt('img/sm_day.png','sm_rta');   changeIt('img/qw_day.png','qw_rta');   changeIt('img/quota_day.png','quota_rta');">day</a> - 
-		<a href="#" onclick="changeIt('img/week.png','rta');  changeIt('img/sm_week.png','sm_rta');  changeIt('img/qw_week.png','qw_rta');  changeIt('img/quota_week.png','quota_rta');">week</a> - 
-		<a href="#" onclick="changeIt('img/2week.png','rta'); changeIt('img/sm_2week.png','sm_rta'); changeIt('img/qw_2week.png','qw_rta'); changeIt('img/quota_2week.png','quota_rta');">2-week</a> - 
-		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/sm_month.png','sm_rta'); changeIt('img/qw_month.png','qw_rta'); changeIt('img/quota_month.png','quota_rta');">month</a> - 
-		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/sm_year.png','sm_rta');  changeIt('img/qw_year.png','qw_rta');  changeIt('img/quota_year.png','quota_rta');">year</a></td></tr>
-		<tr><td>
-		<img src="img/sm_day.png" id='sm_rta' border='0'></td></tr>
-	</tbody>
-	</table>
-<br>
-	<table align=center border="1" cellpadding="0" cellspacing="0">
-        <tbody>
-		<tr class="header"><td align="center">Real-time Accounting of Pending Jobs: 
-		<a href="#" onclick="changeIt('img/hour.png','rta');  changeIt('img/sm_hour.png','sm_rta');  changeIt('img/qw_hour.png','qw_rta');  changeIt('img/quota_hour.png','quota_rta');">hour</a> - 
-		<a href="#" onclick="changeIt('img/day.png','rta');   changeIt('img/sm_day.png','sm_rta');   changeIt('img/qw_day.png','qw_rta');   changeIt('img/quota_day.png','quota_rta');">day</a> - 
-		<a href="#" onclick="changeIt('img/week.png','rta');  changeIt('img/sm_week.png','sm_rta');  changeIt('img/qw_week.png','qw_rta');  changeIt('img/quota_week.png','quota_rta');">week</a> - 
-		<a href="#" onclick="changeIt('img/2week.png','rta'); changeIt('img/sm_2week.png','sm_rta'); changeIt('img/qw_2week.png','qw_rta'); changeIt('img/quota_2week.png','quota_rta');">2-week</a> - 
-		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/sm_month.png','sm_rta'); changeIt('img/qw_month.png','qw_rta'); changeIt('img/quota_month.png','quota_rta');">month</a> - 
-		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/sm_year.png','sm_rta');  changeIt('img/qw_year.png','qw_rta');  changeIt('img/quota_year.png','quota_rta');">year</a></td></tr>
-		<tr><td>
-		<img src="img/qw_day.png" id='qw_rta' border='0'></td></tr>
-	</tbody>
-	</table>
-<br>
-	<table align=center border="1" cellpadding="0" cellspacing="0">
-        <tbody>
-		<tr class="header"><td align="center">Real-time Accounting of jobs by Quota:
-		<a href="#" onclick="changeIt('img/hour.png','rta');  changeIt('img/sm_hour.png','sm_rta');  changeIt('img/qw_hour.png','qw_rta');  changeIt('img/quota_hour.png','quota_rta');">hour</a> - 
-		<a href="#" onclick="changeIt('img/day.png','rta');   changeIt('img/sm_day.png','sm_rta');   changeIt('img/qw_day.png','qw_rta');   changeIt('img/quota_day.png','quota_rta');">day</a> - 
-		<a href="#" onclick="changeIt('img/week.png','rta');  changeIt('img/sm_week.png','sm_rta');  changeIt('img/qw_week.png','qw_rta');  changeIt('img/quota_week.png','quota_rta');">week</a> - 
-		<a href="#" onclick="changeIt('img/2week.png','rta'); changeIt('img/sm_2week.png','sm_rta'); changeIt('img/qw_2week.png','qw_rta'); changeIt('img/quota_2week.png','quota_rta');">2-week</a> - 
-		<a href="#" onclick="changeIt('img/month.png','rta'); changeIt('img/sm_month.png','sm_rta'); changeIt('img/qw_month.png','qw_rta'); changeIt('img/quota_month.png','quota_rta');">month</a> - 
-		<a href="#" onclick="changeIt('img/year.png','rta');  changeIt('img/sm_year.png','sm_rta');  changeIt('img/qw_year.png','qw_rta');  changeIt('img/quota_year.png','quota_rta');">year</a></td></tr>
-		<tr><td>
-		<img src="img/quota_day.png" id='quota_rta' border='0'></td></tr>
-	</tbody>
-	</table>
+        <tbody>';
+    echo '<tr class="header"><td align="center">Real-time Accounting of' . $descr[$key] . ":\n";
+    foreach ($times as $time) {
+        print '            <a href="#" onclick="';
+        foreach (array_keys($mapping) as $type) {
+            printf("changeIt('img/%s%s.png','%s');", $mapping[$type], $time, $type);
+        }
+        printf ("\">%s</a> %s\n", $time, $time === 'year' ? '' : '-' );
+    }
+    echo "    </td></tr>
+        <tr><td> <img src=\"img/$mapping[$key]day.png\" id='$key' border='0'> </td></tr>
+    </tbody>
+    </table>";
+}
+
+
+?>
+
 <br>
       </td>
     </tr>
