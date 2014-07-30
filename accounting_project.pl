@@ -12,8 +12,6 @@ my $config_file = './phpqstat.conf';  # simple key/value pairs
 
 my $verbose = 1;
 
-my @projects;
-
 # template fields are: department, state.
 my $DS_tmpl = 'DS:prj-%s-%s:GAUGE:1000000:0:999995000 ';
 
@@ -65,18 +63,18 @@ sub get_projects {
 #---------------------------------------------------------
 sub insert_data {
     my ($rrd_root, $p_r) = @_;
-    my %files;
 
     foreach my $project (keys %{$p_r}) {
         print STDERR "Prj=$project\n" if $verbose;
         my $file = "$rrd_root/qacct_prj_$project.rrd";
         if ( ! -f $file ) {
+            print STDERR "Creating [$file].\n" ;
             create_rrd($project,$file);
         } else {
-            #print STDERR "[$file] already exists.\n" ;
+            print STDERR "[$file] already exists.\n" ;
         }
 
-        my $cmd = sprintf 'rrdtool update %s -t used:avail N:%d:%d', $file, @{$p_r->{$project}};
+        my $cmd = sprintf 'rrdtool update %s -t running:pending N:%d:%d', $file, @{$p_r->{$project}};
         print STDERR "update command: $cmd\n" if $verbose;
         system($cmd);
         if ($? == -1) { 
@@ -85,7 +83,6 @@ sub insert_data {
 
     }
 
-    return %files;
 }
 #------------------------------------------g--------------
 sub create_rrd {
@@ -93,25 +90,46 @@ sub create_rrd {
     my $len = length $project < 12 ? length $project : 12;
     my $project_munged = substr($project,$len);
     $project_munged =~ s/-/_/g;
-    my $DS = 'DS:used:GAUGE:300:0:999995000' . ' '
-           . 'DS:avail:GAUGE:300:0:999995000';
+    my $DS = 'DS:running:GAUGE:180:0:999995000' . ' '
+           . 'DS:pending:GAUGE:180:0:999995000';
     my $cmd = "rrdtool create $file -b -6y -s 180 $DS $RRAs";
     print STDERR "Running create_rrd command:  $cmd\n" if $verbose;
-    #return system($cmd);
+    return system($cmd);
 }
 #---------------------------------------------------------
 sub get_data {
     my ($qstat, @projects) = @_;
     my %counts;
+
+    print STDERR "Getting data...\n";
     
-    open (QSTAT, "$QSTAT -ext -u '*' |") or die "Failed to start qstat: $!";
-    while (my $line = <QSTAT>) {
-        next unless $line =~ /^\d/;
+# beckerje@systemsutils:~/PHPQstat (master)$ qstat -ext|head
+# job-ID  prior   ntckts  name       user         project          department state cpu        mem     io      tckts ovrts otckt ftckt stckt share queue                          jclass                         slots ja-task-ID
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# 9045318 1.49902 1.00000 efseg_2630 pmadm        pubmed           ieb        dr    NA         NA      NA      20452     0 20000   452     0 0.11  high@sge855.be-md.ncbi.nlm.nih                                    1
+# 1227476 0.50007 0.00007 TestQueryT wonkim       unified          cbb        r     0:00:13:52 37.20146 362.44018     1     0     0     1     0 0.00  unified@sge663.be-md.ncbi.nlm.                                    1
+# 1227477 0.50007 0.00007 TestQueryT wonkim       unified          cbb        r     0:00:18:59 50.50506 97.94086     1     0     0     1     0 0.00  unified@sge529.be-md.ncbi.nlm.                                    1
+# 3181928 0.50008 0.00008 sparse.369 agarwala     unified          ieb        qw                                   1     0     0     1     0 0.00                                                                    1
+# 3181929 0.50008 0.00008 sparse.370 agarwala     unified          ieb        qw                                   1     0     0     1     0 0.00                                                                    1
+# 3181930 0.50008 0.00008 sparse.371 agarwala     unified          ieb        qw                                   1     0     0     1     0 0.00                                                                    1
+
+
+    open (my $QSTAT, '-|', "$QSTAT -ext -u '*'") or die "Failed to start qstat: $!";
+    while (my $line = <$QSTAT>) {
+        next unless $line =~ /^\d/;  
         my @line = split (' ', $line);
         my ($user, $project, $dept, $state) = @line[4..8];
 
         print "$user, $project, $dept, $state\n";
 
+        my $idx = $state =~ /qw/ ? 1 : 0;
+        $counts{$project}[$idx]++;
+    }
+
+    foreach my $prj (keys %counts) {
+        foreach my $idx (0,1) {
+            $counts{$prj}[$idx] ||= 0;
+        }
     }
 
     close QSTAT;
@@ -124,9 +142,10 @@ sub get_data {
 parse_conf_file($config_file);  # This pollutes %ENV !!!!
 
 my $rrd_root=make_rrd_root($ENV{RRD_ROOT});
-@projects = get_projects if !@projects;
 
-my %project= get_projects;
+my @projects= get_projects;
+my %project = get_data(@projects);
+
 print Dumper(\%project) if $verbose;
 
 insert_data($rrd_root,\%project);
