@@ -187,7 +187,7 @@ foreach (array_keys($mapping) as $key) {
     echo '<br>
 	<table align=center border="1" cellpadding="0" cellspacing="0">
         <tbody>';
-    echo '<tr class="header"><td align="center">Real-time Accounting of' . $descr[$key] . ":\n";
+    echo '<tr class="header"><td align="center">Real-time Accounting of ' . $descr[$key] . ":\n";
     foreach ($times as $time) {
         print '            <a href="#" onclick="';
         foreach (array_keys($mapping) as $type) {
