@@ -111,8 +111,8 @@ sub create_rrd {
     my $len = length $quota < 12 ? length $quota : 12;
     my $quota_munged = substr($quota,$len);
     $quota_munged =~ s/-/_/g;
-    my $DS = 'DS:used:GAUGE:300:0:999995000' . ' '
-           . 'DS:avail:GAUGE:300:0:999995000';
+    my $DS = 'DS:used:GAUGE:180:0:999995000' . ' '
+           . 'DS:avail:GAUGE:180:0:999995000';
     my $cmd = "rrdtool create $file -b -6y -s 180 $DS $RRAs";
     print STDERR "Running create_rrd command:  $cmd\n" if $verbose;
     return system($cmd);
