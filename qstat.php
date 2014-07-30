@@ -166,11 +166,11 @@ $mapping = array(
 );
 
 $descr = array(
-    'rta'       => 'Running Jobs:',
-    'sm_rta'    => 'Running Jobs (low counts):',
-    'qw_rta'    => 'Pending Jobs:',
-    'quota_rta' => 'jobs by Quota:',
-    'prj_rta'   => 'jobs by Project:',
+    'rta'       => 'Running Jobs',
+    'sm_rta'    => 'Running Jobs (low counts)',
+    'qw_rta'    => 'Pending Jobs',
+    'quota_rta' => 'jobs by Quota',
+    'prj_rta'   => 'jobs by Project',
 );
 
 $times = array(
