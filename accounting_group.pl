@@ -1,12 +1,13 @@
 #!/usr/bin/perl
-#
+
 use strict;
 use warnings;
 use Data::Dumper;
-
+use Carp;
 
 my $QSTAT = '/netopt/uge/bin/lx-amd64/qstat';
 my $QCONF = '/netopt/uge/bin/lx-amd64/qconf';
+my $QQUOTA = '/netopt/uge/bin/lx-amd64/qquota';
 my $config_file = './phpqstat.conf';  # simple key/value pairs
 
 my $verbose = 1;
@@ -23,7 +24,6 @@ my $RRAs = join(' ',(
     "RRA:AVERAGE:0.1:480:1830",  "RRA:MAX:0.2:480:1830",  "RRA:MIN:0.2:480:1830",  # 5 years, daily bins
 ));
 
-#
 
 sub make_rrd_root {
     my $root=shift || return;
@@ -36,12 +36,25 @@ sub make_rrd_root {
 
 sub parse_conf_file {
     my ($file) = @_;
-    my %config;
+    #my %config;
    
-    $config{RRD_ROOT}='/home/beckerje/PHPQstat';
+    $ENV{RRD_ROOT}='/home/beckerje/PHPQstat';
 
-    %ENV= (%ENV, %config);  
-    return %config;
+    open(my $conf,'<', $file) || croak "Failed opening conf file: $!";
+
+    while (my $line = <$conf>) {
+        next unless $line =~ /(SGE_\w+)=(.+)/;
+        my ($var, $val) = ($1,$2);
+
+        $val =~ s/^'"//;
+        $val =~ s/'"$//;
+        $ENV{$var} = $val;
+    }
+
+    close $conf;
+
+    #%ENV= (%ENV, %config);  
+    #return %config;
 }
 #---------------------------------------------------------
 sub get_projects {
@@ -50,26 +63,38 @@ sub get_projects {
     return split("\n", $output);
 }
 #---------------------------------------------------------
-sub make_rrds {
-    my ($rrd_root, @projects) = @_;
+sub insert_data {
+    my ($rrd_root, $q_r) = @_;
     my %files;
 
-    foreach my $project (@projects) {
-        my $file = "$rrd_root/qacct_prj_$project.rrd";
+    foreach my $quota (keys %{$q_r}) {
+        print STDERR "Quota=$quota\n" if $verbose;
+        my $file = "$rrd_root/qacct_quota_$quota.rrd";
         if ( ! -f $file ) {
-            create_rrd($project,$file);
+            create_rrd($quota,$file);
         } else {
             #print STDERR "[$file] already exists.\n" ;
         }
-        $files{$project}=$file;
+
+        my $cmd = sprintf 'rrdtool update %s -t used:avail N:%d:%d', $file, @{$q_r->{$quota}};
+        print STDERR "update command: $cmd\n" if $verbose;
+        system($cmd);
+        if ($? == -1) { 
+            croak "ERROR: $!";
+        }
+
     }
 
     return %files;
 }
 #---------------------------------------------------------
 sub create_rrd {
-    my ($project,$file) = @_;
-    my $DS = "DS:$project-used:GAUGE:1000000:0:999995000";
+    my ($quota,$file) = @_;
+    my $len = length $quota < 12 ? length $quota : 12;
+    my $quota_munged = substr($quota,$len);
+    $quota_munged =~ s/-/_/g;
+    my $DS = 'DS:used:GAUGE:300:0:999995000' . ' '
+           . 'DS:avail:GAUGE:300:0:999995000';
     my $cmd = "rrdtool create $file -b -6y -s 180 $DS $RRAs";
     print STDERR "Running create_rrd command:  $cmd\n" if $verbose;
     #return system($cmd);
@@ -101,7 +126,8 @@ parse_conf_file($config_file);  # This pollutes %ENV !!!!
 my $rrd_root=make_rrd_root($ENV{RRD_ROOT});
 @projects = get_projects if !@projects;
 
-my %files = make_rrds($rrd_root,@projects);
+my %quota = get_quotas;
+print Dumper(\%quota) if $verbose;
 
-my %counts = get_data($QSTAT, @projects);
+insert_data($rrd_root,\%quota);
 
