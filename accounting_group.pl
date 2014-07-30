@@ -64,19 +64,19 @@ sub get_projects {
 }
 #---------------------------------------------------------
 sub insert_data {
-    my ($rrd_root, $q_r) = @_;
+    my ($rrd_root, $g_r) = @_;
     my %files;
 
-    foreach my $quota (keys %{$q_r}) {
-        print STDERR "Quota=$quota\n" if $verbose;
-        my $file = "$rrd_root/qacct_quota_$quota.rrd";
+    foreach my $group (keys %{$g_r}) {
+        print STDERR "Group=$group\n" if $verbose;
+        my $file = "$rrd_root/qacct_prj_$group.rrd";
         if ( ! -f $file ) {
-            create_rrd($quota,$file);
+            create_rrd($group,$file);
         } else {
             #print STDERR "[$file] already exists.\n" ;
         }
 
-        my $cmd = sprintf 'rrdtool update %s -t used:avail N:%d:%d', $file, @{$q_r->{$quota}};
+        my $cmd = sprintf 'rrdtool update %s -t used:avail N:%d:%d', $file, @{$g_r->{$group}};
         print STDERR "update command: $cmd\n" if $verbose;
         system($cmd);
         if ($? == -1) { 
@@ -87,12 +87,12 @@ sub insert_data {
 
     return %files;
 }
-#---------------------------------------------------------
+#------------------------------------------g--------------
 sub create_rrd {
-    my ($quota,$file) = @_;
-    my $len = length $quota < 12 ? length $quota : 12;
-    my $quota_munged = substr($quota,$len);
-    $quota_munged =~ s/-/_/g;
+    my ($group,$file) = @_;
+    my $len = length $group < 12 ? length $group : 12;
+    my $group_munged = substr($group,$len);
+    $group_munged =~ s/-/_/g;
     my $DS = 'DS:used:GAUGE:300:0:999995000' . ' '
            . 'DS:avail:GAUGE:300:0:999995000';
     my $cmd = "rrdtool create $file -b -6y -s 180 $DS $RRAs";
@@ -126,8 +126,8 @@ parse_conf_file($config_file);  # This pollutes %ENV !!!!
 my $rrd_root=make_rrd_root($ENV{RRD_ROOT});
 @projects = get_projects if !@projects;
 
-my %quota = get_quotas;
-print Dumper(\%quota) if $verbose;
+my %group= get_groups;
+print Dumper(\%group) if $verbose;
 
-insert_data($rrd_root,\%quota);
+insert_data($rrd_root,\%group);
 
