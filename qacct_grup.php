@@ -45,7 +45,7 @@ Cal teniu en compte que els valors que revisa el gestor de cues per calcular la 
 <tr> 
       <td CLASS="bottom"> 
 	<b>Version : 0.1 (April 2011)</b><br> 
-        <a href="http://phpqstat.sourceforge.net">http://phpqstat.sourceforge.net</a><br> 
+        <a href="https://github.com/hawson/PHPQstat">https://github.com/hawson/PHPQstat</a><br>
       </td> 
     </tr>  </tbody> 
 </table> 

@@ -3,6 +3,7 @@
 <head>
   <title>PHPQstat</title>
   <meta name="AUTHOR" content="Jordi Blasco Pallares ">
+  <meta name="AUTHOR" content="hawson@gmail.com">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="KEYWORDS" content="gridengine sge sun hpc supercomputing batch queue linux xml qstat qhost jordi blasco solnu">
   <link rel="stylesheet" href="phpqstat.css" type="text/css" /> 
@@ -26,8 +27,8 @@
 
     <tr> 
       <td align=center CLASS="bottom"> 
-	version : 0.2.0 (February 2012)<br>
-        <a href="http://phpqstat.sourceforge.net">http://phpqstat.sourceforge.net</a><br> 
+        version : 0.3.0 (31 July 2014)<br>
+        <a href="https://github.com/hawson/PHPQstat">https://github.com/hawson/PHPQstat</a><br>
       </td> 
     </tr> 
 

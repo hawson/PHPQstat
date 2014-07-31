@@ -1,21 +1,27 @@
 ABOUT PHPQstat
 ==============================================
-PHPQstat is a web interface that allows to connect to the useful commands of the Sun Grid Engine (SGE) batch queue system. With this interface, you can monitor your job status and your queues health at real time.
+PHPQstat is a web interface that allows to connect to the useful commands
+of the Sun Grid Engine (SGE) batch queue system. With this interface,
+you can monitor your job status and your queues health at real time.
 
 AUTHOR : Written by Jordi Blasco Pallarès (jordi.blasco@gmail.com).
+         Updates by Hawson <hawson@gmail.com>
 
-REPORTING BUGS : Report bugs to SourceForge Tracker.
+URL: https://github.com/hawson/PHPQstat
 
-LICENSE : This is free software: you are free to change and redistribute it. GNU General Public License version 3.0 (GPLv3).
-Version : 0.2.0 (February 2012)
+REPORTING BUGS : Report bugs to github at the URL above
 
-http://phpqstat.sourceforge.net
+LICENSE : This is free software: you are free to change and redistribute
+          it. GNU General Public License version 3.0 (GPLv3).
+
+Version : 0.3.0 (31 July 2014
+
 
 Please, visit our forum project and send us your feedback.
 
 DEPENDENCIES
 ==============================================
-You will need Apache server, php5, rrdtool and awk.
+You will need Apache server, php5, rrdtool, awk, and perl.
 
 INSTALL
 ==============================================
@@ -25,8 +31,11 @@ INSTALL
     SGE_ROOT=/sge
     RRD_ROOT=/var/www/PHPQstat/rrd
     WEB_ROOT=/var/www/PHPQstat
-(3) Add the following line on the crontab :
-    */3 * * * * /var/www/PHPQstat/accounting.sh > /dev/null 2>&1
+(3) Add the following lines on the crontab :
+    */3 * * * * cd /var/www/PHPQstat; /var/www/PHPQstat/accounting.sh > /dev/null 2>&1
+    */3 * * * * cd /var/www/PHPQstat; /var/www/PHPQstat/accounting_quota.pl  > /dev/null
+    */3 * * * * cd /var/www/PHPQstat; /var/www/PHPQstat/accounting_project.pl  > /dev/null
+
 
 ROADMAP
 ==============================================
@@ -48,3 +57,4 @@ CHANGELOG
 0.1.2 Solved problem on cputime request on pending job
 0.1.3 Solved problems with Start time and Submission Time
 0.2.0 Real-time accounting feature
+0.3.0 Continued development, add RQS and Project accounting.
