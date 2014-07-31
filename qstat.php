@@ -45,7 +45,7 @@ function make_seed() {
 
 # set to 1 to speed up testing (And using stale data in the tables at
 # the beginning.  Charts should be current)
-$cache = 1;
+$cache = 0;
 
 srand(make_seed());
 
@@ -57,6 +57,9 @@ for($i = 0; $i < $password_length; $i ++) {
 
 if ($cache) {
     $token="testtoken";
+} else {
+    unlink ("/tmp/testtoken-1.xml");
+    unlink ("/tmp/testtoken-2.xml");
 }
 
 $tokenfile1 = "/tmp/$token-1.xml";
