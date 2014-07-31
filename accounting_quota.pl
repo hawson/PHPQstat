@@ -5,6 +5,7 @@ use warnings;
 use Data::Dumper;
 use Carp;
 
+# Set this accordingly...
 my $QSTAT = '/netopt/uge/bin/lx-amd64/qstat';
 my $QCONF = '/netopt/uge/bin/lx-amd64/qconf';
 my $QQUOTA = '/netopt/uge/bin/lx-amd64/qquota';

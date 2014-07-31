@@ -5,6 +5,7 @@ use warnings;
 use Data::Dumper;
 use Carp;
 
+# Set these accordingly.
 my $QSTAT = '/netopt/uge/bin/lx-amd64/qstat';
 my $QCONF = '/netopt/uge/bin/lx-amd64/qconf';
 my $QQUOTA = '/netopt/uge/bin/lx-amd64/qquota';
@@ -106,9 +107,9 @@ sub get_data {
 # beckerje@systemsutils:~/PHPQstat (master)$ qstat -ext|head
 # job-ID  prior   ntckts  name       user         project          department state cpu        mem     io      tckts ovrts otckt ftckt stckt share queue                          jclass                         slots ja-task-ID
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 9045318 1.49902 1.00000 efseg_2630 pmadm        pubmed           ieb        dr    NA         NA      NA      20452     0 20000   452     0 0.11  high@sge855.be-md.ncbi.nlm.nih                                    1
-# 1227476 0.50007 0.00007 TestQueryT wonkim       unified          cbb        r     0:00:13:52 37.20146 362.44018     1     0     0     1     0 0.00  unified@sge663.be-md.ncbi.nlm.                                    1
-# 1227477 0.50007 0.00007 TestQueryT wonkim       unified          cbb        r     0:00:18:59 50.50506 97.94086     1     0     0     1     0 0.00  unified@sge529.be-md.ncbi.nlm.                                    1
+# 9045318 1.49902 1.00000 efseg_2630 pmadm        pubmed           ieb        dr    NA         NA      NA      20452     0 20000   452     0 0.11  high@sge855                       1
+# 1227476 0.50007 0.00007 TestQueryT wonkim       unified          cbb        r     0:00:13:52 37.20146 362.44018     1     0     0     1     0 0.00  unified@sge663                 1
+# 1227477 0.50007 0.00007 TestQueryT wonkim       unified          cbb        r     0:00:18:59 50.50506 97.94086     1     0     0     1     0 0.00  unified@sge529                  1
 # 3181928 0.50008 0.00008 sparse.369 agarwala     unified          ieb        qw                                   1     0     0     1     0 0.00                                                                    1
 # 3181929 0.50008 0.00008 sparse.370 agarwala     unified          ieb        qw                                   1     0     0     1     0 0.00                                                                    1
 # 3181930 0.50008 0.00008 sparse.371 agarwala     unified          ieb        qw                                   1     0     0     1     0 0.00                                                                    1
