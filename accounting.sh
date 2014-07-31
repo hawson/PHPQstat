@@ -47,7 +47,6 @@ for q in $QUEUES; do
     data="$data:$cpusused"
     rrdupdate $RRD_ROOT/qacct_${q}.rrd $data
 #    echo "rrdupdate $RRD_ROOT/qacct_${q}.rrd $data"
-    i=$((i+1))
 done
 
 rm -f $QSTAT_SUMMARY
@@ -85,7 +84,7 @@ for q in $QUEUES; do
     pad=$((20-${#q}))
     datagrups="$datagrups GPRINT:${q}-min:%${pad}.0lf   GPRINT:${q}-avg:%5.0lf    GPRINT:${q}-max:%5.0lf     GPRINT:${q}-last:%5.0lf\\l"
 
-    i=$((i+1))
+    i=$(((i+1) % ${#COLOR[@]}))
 done
 
 # Queue Waiting
@@ -141,7 +140,7 @@ for f in $RRD_ROOT/*_quota_*.rrd; do
     pad=$((20-${#QUOTA}))
     STATS="GPRINT:${QUOTA}-min:%${pad}.0lf GPRINT:${QUOTA}-avg:%5.0lf GPRINT:${QUOTA}-max:%5.0lf GPRINT:${QUOTA}-last:%5.0lf\\l" 
     quotagroups="$DEF $VDEF $LINE $STATS  "
-    i=$((i+1))
+    i=$(((i+1) % ${#COLOR[@]}))
 done
 
 RULE=""
@@ -174,7 +173,7 @@ for f in $RRD_ROOT/*_prj_*.rrd; do
      STATS="GPRINT:${PRJ}-min:%${pad}.0lf GPRINT:${PRJ}-avg:%5.0lf GPRINT:${PRJ}-max:%5.0lf GPRINT:${PRJ}-last:%5.0lf"
     PSTATS="GPRINT:${PRJ}-pmin:%8.0lf GPRINT:${PRJ}-pavg:%5.0lf GPRINT:${PRJ}-pmax:%5.0lf GPRINT:${PRJ}-plast:%5.0lf\\l" 
     projectgroups="$DEF $VDEF $LINE $STATS  $PSTATS "
-    i=$((i+1))
+    i=$(((i+1) % ${#COLOR[@]}))
 done
 
 RULE=""
