@@ -1,14 +1,16 @@
 ##############################################################
 #                     Variables to edit                      #
 ##############################################################
-MAIL=beckerje@mail.nih.gov
-export SGE_ROOT=/netopt/uge
-export SGE_CELL=ncbi
+
+# All of these should be set according to your local configration
+MAIL=<your email here>
+export SGE_ROOT=/sge
+export SGE_CELL=deault
 export SGE_ARCH=`$SGE_ROOT/util/arch`
 export PATH=$SGE_ROOT/bin/$SGE_ARCH:$PATH
 
-RRD_ROOT=/export/home/web/public/htdocs/PHPQstat/rrd
-WEB_ROOT=/export/home/web/public/htdocs/PHPQstat
+RRD_ROOT=/var/www/htdocs/PHPQstat/rrd
+WEB_ROOT=/bar/www/htdocs/PHPQstat
 
 
 # Find all queues in your Batch Queue System
@@ -29,6 +31,5 @@ CCPU=( 0 272 296 100 284 124 56 0 148 116 104 20 76 0 24 52 52 )
 CLIMIT=( 0 411 460 149 441 200 64 0 228 175 151 28 102 0 53 75 81 )
 ngroup=16
 tcputime=0
-
 
 STACKED=
