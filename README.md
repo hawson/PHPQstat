@@ -40,8 +40,8 @@ INSTALL
 SCREENSHOTS
 ==============================================
 ![Running Jobs by Queue](https://raw.githubusercontent.com/hawson/PHPQstat/master/screenshots/day.png)
-![Total Pending Jobs](https://raw.githubusercontent.com/hawson/PHPQstat/master/screenshots/qw-day.png)
-![Running Jobs by Resource Quotas](https://raw.githubusercontent.com/hawson/PHPQstat/master/screenshots/quota-day.png)
+![Total Pending Jobs](https://raw.githubusercontent.com/hawson/PHPQstat/master/screenshots/qw_day.png)
+![Running Jobs by Resource Quotas](https://raw.githubusercontent.com/hawson/PHPQstat/master/screenshots/quota_day.png)
 
 
 ROADMAP
