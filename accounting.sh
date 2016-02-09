@@ -133,6 +133,7 @@ for f in $RRD_ROOT/*_quota_*.rrd; do
     FILE=`basename $f`
     QUOTA=${FILE/qacct_quota_/};
     QUOTA=${QUOTA/_limit.rrd/};
+    QUOTA=${QUOTA/.rrd/};
     QUOTAS="$QUOTA $QUOTAS"
     DEF="$quotagroups DEF:${QUOTA}-used=$RRD_ROOT/$FILE:used:AVERAGE DEF:${QUOTA}-avail=$RRD_ROOT/$FILE:avail:AVERAGE "
     VDEF="VDEF:${QUOTA}-min=${QUOTA}-used,MINIMUM    VDEF:${QUOTA}-avg=${QUOTA}-used,AVERAGE    VDEF:${QUOTA}-max=${QUOTA}-used,MAXIMUM   VDEF:${QUOTA}-last=${QUOTA}-used,LAST"
