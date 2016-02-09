@@ -49,17 +49,17 @@ $cache = 0;
 
 srand(make_seed());
 
-$alfa = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-$token = "";
-for($i = 0; $i < $password_length; $i ++) {
-  $token .= $alfa[rand(0, strlen($alfa))];
-}
+$token=uniqid('phpqstat_');
 
 if ($cache) {
     $token="testtoken";
 } else {
-    unlink ("/tmp/testtoken-1.xml");
-    unlink ("/tmp/testtoken-2.xml");
+    if (file_exists("/tmp/testtoken-1.xml")) {
+        unlink ("/tmp/testtoken-1.xml");
+    }
+    if (file_exists("/tmp/testtoken-2.xml")) {
+        unlink ("/tmp/testtoken-2.xml");
+    }
 }
 
 $tokenfile1 = "/tmp/$token-1.xml";

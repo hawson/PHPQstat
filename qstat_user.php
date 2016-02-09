@@ -18,11 +18,7 @@ function make_seed() {
 
 srand(make_seed());
 
-$alfa = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-$token = "";
-for($i = 0; $i < $password_length; $i ++) {
-  $token .= $alfa[rand(0, strlen($alfa))];
-}
+$token = uniqid('phpqstat_');
 
 function show_run($tokenFile,$owner) {
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
@@ -56,7 +52,7 @@ function show_run($tokenFile,$owner) {
 		  <td>$job_list->slots</td>
 		  </tr>";
   }
-  exec("rm $tokenFile");
+  unlink($tokenFile);
   echo "</tbody></table><br><br>";
 
 }
@@ -93,7 +89,7 @@ function show_pend($tokenFile,$owner) {
 		  <td>$job_list->slots</td>
 		  </tr>";
   }
-  exec("rm $tokenFile");
+  unlink($tokenFile);
   echo "</tbody></table><br>";
 
 }

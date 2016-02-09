@@ -41,11 +41,7 @@ function make_seed() {
 
 srand(make_seed());
 
-$alfa = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-$token = "";
-for($i = 0; $i < $password_length; $i ++) {
-  $token .= $alfa[rand(0, strlen($alfa))];
-}
+$token=uniqid('phpqstat_');
 
 $out = exec("./qhostout /tmp/$token.xml");
 
@@ -64,7 +60,8 @@ foreach ($qhost->host as $host) {
 }
 
 
-exec("rm /tmp/$token.xml");
+unlink("/tmp/$token.xml");
+
 ?>
 
 	  </tbody>

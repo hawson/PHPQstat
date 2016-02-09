@@ -33,11 +33,9 @@ function make_seed() {
 
 srand(make_seed());
 
-$alfa = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-$token = "";
-for($i = 0; $i < $password_length; $i ++) {
-  $token .= $alfa[rand(0, strlen($alfa))];
-}
+$token = uniqid('phpqstat_');
+
+
 if($jobstat){$jobstatflag="-s $jobstat";}else{$jobstatflag="";}
 $out = exec("./gexml -j $jobid $jobstatflag -u all -o /tmp/$token.xml");
 
@@ -106,7 +104,7 @@ echo "	<table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=
            </tbody>
 	</table><br>";
 
-exec("rm /tmp/$token.xml");
+unlink("/tmp/$token.xml");
 ?>
 
 
