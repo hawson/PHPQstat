@@ -73,9 +73,12 @@ sub get_quotas {
         $quota =~ s,/\d+,,x;
         my ($used,$max) = $slots =~ m,slots=(\d+)/(\d+),x;
 
-        $quota{$quota} = [ $used,$max];
-        
-        #print STDERR "[$quota] [$slots:$used,$max] [$filter]\n";
+        if (defined($used) and defined($max)) {
+            $quota{$quota} = [ $used,$max];
+            print STDERR "[$quota] [$slots:$used,$max] [$filter]\n" if $verbose;
+        } else {
+            print STDERR "[$quota] Undefined value for used:max ($filter)\n" if $verbose;
+        }
 
     }
 
@@ -95,7 +98,11 @@ sub insert_data {
             #print STDERR "[$file] already exists.\n" ;
         }
 
-        my $cmd = sprintf 'rrdtool update %s -t used:avail N:%d:%d', $file, @{$q_r->{$quota}};
+        my $cmd;
+        $cmd = sprintf 'rrdtool update %s -t used:avail N:%d:%d', $file, @{$q_r->{$quota}} if grep { defined } @{$q_r->{$quota}};
+        if (!$cmd) {
+            print STDERR "Bad upate data for $quota.  File=$file\n" if $verbose;
+        }
         print STDERR "update command: $cmd\n" if $verbose;
         system($cmd);
         if ($? == -1) { 
