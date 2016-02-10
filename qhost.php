@@ -20,13 +20,14 @@ echo "<tr><td><h1>PHPQstat</h1></td></tr>
 <br>
 
 
-	<table align=center width=95% border="1" cellpadding="0" cellspacing="0">
+	<table align=center width=95% border="1" cellpadding="2" cellspacing="0">
         <tbody>
 		<tr CLASS="header">
 		<td>Hostname</td>
                 <td>Architecture</td>
                 <td>NCPU</td>
                 <td>Load avg</td>
+                <td>NP Load avg</td>
                 <td>mem_total</td>
                 <td>mem_used</td>
                 <td>swap_total</td>
@@ -54,15 +55,38 @@ if ($qstat_reduce != "yes") {
 	$qhost = simplexml_load_file("/tmp/qhost.xml");
 }
 
+
+#<host name='sge998.be-md.ncbi.nlm.nih.gov'>
+#0 <hostvalue name='arch_string'>lx-amd64</hostvalue>
+#1 <hostvalue name='num_proc'>32</hostvalue>
+#2 <hostvalue name='m_socket'>2</hostvalue>
+#3 <hostvalue name='m_core'>16</hostvalue>
+#4 <hostvalue name='m_thread'>32</hostvalue>
+#5 <hostvalue name='np_load_avg'>0.01</hostvalue>
+#6 <hostvalue name='mem_total'>125.9G</hostvalue>
+#7 <hostvalue name='mem_used'>3.1G</hostvalue>
+#8 <hostvalue name='swap_total'>56.0G</hostvalue>
+#9 <hostvalue name='swap_used'>101.6M</hostvalue>
+$metrics = array(0,1,5,6,7,8,9);
+
+
 $i=0;
 foreach ($qhost->host as $host) {
-	echo "<tr>";
+	echo "<tr align='right'>";
+    #echo "<!-- "; print_r($host); echo " -->";
+
 	$hostname=$host['name'];
 	echo "          <td>$hostname</td>";
-	foreach ($qhost->host[$i] as $hostvalue) {
-		echo "          <td>$hostvalue</td>";
+
+	foreach ($metrics as $key) {
+        $hostvalue = $host->hostvalue[$key];
+        if ($key == 5) {
+            $raw_load = sprintf('%.2f', floatval(floatval($hostvalue) * floatval($host->hostvalue[1])));
+		    echo "	<td>$raw_load</td>";
+        }
+		echo "	<td>$hostvalue</td>";
 	}
-	echo "</tr>";
+	echo "</tr>\n";
 	$i++;
 }
 
