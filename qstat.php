@@ -15,6 +15,7 @@
 <?php
 $owner  = $_GET['owner'];
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
+include("header.php");
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
       <tr><td CLASS=\"bottom\" align=center><a href='index.php'>Home</a> *  <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  <a href=\"qstat.php?owner=$owner\">Queue status</a> * <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * <a href=\"about.php?owner=$owner\">About PHPQstat</a></td></tr>";
 ?>
@@ -36,45 +37,26 @@ echo "<tr><td><h1>PHPQstat</h1></td></tr>
                 </tr>
 
 <?php
-$password_length = 20;
+if ($qstat_reduce != "yes" ) {
+	$password_length = 20;
 
-function make_seed() {
-  list($usec, $sec) = explode(' ', microtime());
-  return (float) $sec + ((float) $usec * 100000);
-}
+	function make_seed() {
+	  list($usec, $sec) = explode(' ', microtime());
+	  return (float) $sec + ((float) $usec * 100000);
+	}
 
-# set to 1 to speed up testing (And using stale data in the tables at
-# the beginning.  Charts should be current)
-$cache = 0;
+	srand(make_seed());
 
-srand(make_seed());
+    $token=uniqid('phpqstat_');
 
-$token=uniqid('phpqstat_');
+	$out = exec("./gexml -u all -R -o /tmp/$token.xml");
 
-if ($cache) {
-    $token="testtoken";
+	//printf("System Output: $out\n"); 
+	$qstat = simplexml_load_file("/tmp/$token.xml");
+
+	//$qstat = simplexml_load_file("/home/xadmin/phpqstat/qstat_user.xml");
 } else {
-    if (file_exists("/tmp/testtoken-1.xml")) {
-        unlink ("/tmp/testtoken-1.xml");
-    }
-    if (file_exists("/tmp/testtoken-2.xml")) {
-        unlink ("/tmp/testtoken-2.xml");
-    }
-}
-
-$tokenfile1 = "/tmp/$token-1.xml";
-$tokenfile2 = "/tmp/$token-2.xml";
-
-
-if (!file_exists($tokenfile1) || !$cache ) {
-    $out = exec("./gexml -u all -R -o $tokenfile1");
-}
-
-//printf("System Output: $out\n"); 
-$qstat = simplexml_load_file($tokenfile1);
-
-if (!$cache) {
-    unlink($tokenfile1);
+	$qstat = simplexml_load_file("/tmp/qstat_queues.xml");
 }
 
 foreach ($qstat->xpath('//cluster_queue_summary') as $cluster_queue_summary) {
@@ -88,6 +70,9 @@ echo "                <tr>
                 <td>$cluster_queue_summary->temp_disabled</td>
                 <td>$cluster_queue_summary->manual_intervention</td>
                 </tr>";
+}
+if ($qstat_reduce != "yes" ) {
+	unlink("/tmp/$token.xml");
 }
 
 echo "                </tbody>
@@ -104,15 +89,12 @@ echo "                </tbody>
 
 ";
 
-if (!$cache || !file_exists($tokenfile2)) {
-    $out2 = exec("./gexml -u all -o $tokenfile2");
+if ($qstat_reduce != "yes" ) {
+	$out2 = exec("./gexml -u all -o /tmp/$token.xml");
+	$jobs = simplexml_load_file("/tmp/$token.xml");
+} else {
+	$jobs = simplexml_load_file("/tmp/qstat_all.xml");
 }
-$jobs = simplexml_load_file($tokenfile2);
-
-if (!$cache) {
-    unlink($tokenfile2);
-}
-
 $nrun=0;
 $srun=0;
 $npen=0;
@@ -152,7 +134,9 @@ echo "          <tr>
                 <td>$szom</td>
                 </tr>
 ";
-
+if ($qstat_reduce != "yes" ) {
+	unlink("/tmp/$token.xml");
+}
 ?>
 
 	  </tbody>

@@ -11,6 +11,7 @@
 <?php
 $owner  = $_GET['owner'];
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
+include("header.php");
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
       <tr><td CLASS=\"bottom\" align=center><a href='index.php'>Home</a> *  <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  <a href=\"qstat.php?owner=$owner\">Queue status</a> * <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * <a href=\"about.php?owner=$owner\">About PHPQstat</a></td></tr>";
 ?>
@@ -32,21 +33,27 @@ echo "<tr><td><h1>PHPQstat</h1></td></tr>
                 <td>swap_used</td>
                 </tr>
 <?php
-$password_length = 20;
+if ($qstat_reduce != "yes") {
 
-function make_seed() {
-  list($usec, $sec) = explode(' ', microtime());
-  return (float) $sec + ((float) $usec * 100000);
+	$password_length = 20;
+
+	function make_seed() {
+	  list($usec, $sec) = explode(' ', microtime());
+	  return (float) $sec + ((float) $usec * 100000);
+	}
+
+	srand(make_seed());
+
+    $token=uniqid('phpqstat_');
+
+	$out = exec("./qhostout /tmp/$token.xml");
+
+	//printf("System Output: $out\n"); 
+	$qhost = simplexml_load_file("/tmp/$token.xml");
+} else {
+	$qhost = simplexml_load_file("/tmp/qhost.xml");
 }
 
-srand(make_seed());
-
-$token=uniqid('phpqstat_');
-
-$out = exec("./qhostout /tmp/$token.xml");
-
-//printf("System Output: $out\n"); 
-$qhost = simplexml_load_file("/tmp/$token.xml");
 $i=0;
 foreach ($qhost->host as $host) {
 	echo "<tr>";
@@ -59,8 +66,9 @@ foreach ($qhost->host as $host) {
 	$i++;
 }
 
-
-unlink("/tmp/$token.xml");
+if ($qstat_reduce != "yes") {
+    unlink("/tmp/$token.xml");
+}
 
 ?>
 
