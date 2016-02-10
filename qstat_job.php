@@ -10,9 +10,10 @@
 
 <?php
 require('time_duration.php');
-$owner  = $_GET['owner'];
-$jobid  = $_GET['jobid'];
-$jobstat  = $_GET['jobstat'];
+$owner   = isset($_GET['owner']) ? $_GET['owner'] : null;
+$jobid   = isset($_GET['jobid']) ? $_GET['jobid'] : null;
+$jobstat = isset($_GET['jobstat']) ? $_GET['jobstat'] : null;
+
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
 include("header.php");
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
@@ -47,6 +48,7 @@ $qstat = simplexml_load_file("/tmp/$token.xml");
 $job_name=$qstat->djob_info->element[0]->JB_job_name;
 $job_owner=$qstat->djob_info->element[0]->JB_owner;
 $job_group=$qstat->djob_info->element[0]->JB_group;
+$job_project=$qstat->djob_info->element[0]->JB_project;
 $job_ust=$qstat->djob_info->element[0]->JB_submission_time;
 $job_st=date('r', date($job_ust * 1 ) );
 $job_qn=$qstat->djob_info->element[0]->JB_hard_queue_list->destin_ident_list->QR_name;
@@ -60,6 +62,7 @@ echo "	<table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=
                 <td>Name</td>
                 <td>Owner</td>
                 <td>Group</td>
+                <td>Project</td>
                 <td>SubmitTime</td>
                 <td>Queue</td>
                 <td>PE</td>
@@ -70,6 +73,7 @@ echo "	<table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=
                 <td>$job_name</td>
                 <td>$job_owner</td>
                 <td>$job_group</td>
+                <td>$job_project</td>
                 <td>$job_st</td>
                 <td>$job_qn</td>
                 <td>$job_pe</td>
