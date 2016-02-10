@@ -36,12 +36,12 @@ function make_seed() {
 srand(make_seed());
 
 $token = uniqid('phpqstat_');
-
+$tokenfile = "/tmp/$token.xml";
 
 if($jobstat){$jobstatflag="-s $jobstat";}else{$jobstatflag="";}
-$out = exec("./gexml -j $jobid $jobstatflag -u all -o /tmp/$token.xml");
+$out = exec("./gexml -j $jobid $jobstatflag -u all -o $tokenfile");
 
-$qstat = simplexml_load_file("/tmp/$token.xml");
+$qstat = simplexml_load_file($tokenfile);
 
 //foreach ($qstat->xpath('detailed_job_info->djob_info->element') as $element) {
 //foreach ($qstat->element[0] as $element) {

@@ -12,10 +12,13 @@
 
 <?php
 $owner  = $_GET['owner'];
-$jobstat  = $_GET['jobstat'];
-$queue  = $_GET['queue'];
+$jobstat = isset($_GET['jobstat']) ? $_GET['jobstat'] : null ;
+$queue   = isset($_GET['queue']) ? $_GET['queue'] : null ;
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
 include("header.php");
+
+$token = uniqid('phpqstat_');
+$tokenfile="/tmp/$token.xml";
 
 if ($qstat_reduce != "yes" ) {
 
@@ -26,12 +29,11 @@ if ($qstat_reduce != "yes" ) {
 	}
 
 	srand(make_seed());
-    $token = uniqid('phpqstat_');
 }
 
 function show_run($qstat,$owner,$queue) {
   global $qstat_reduce;
-  global $token;
+  global $tokenfile;
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
 		  <tr>
@@ -50,7 +52,7 @@ function show_run($qstat,$owner,$queue) {
 		  </tr>";
   
   if ($qstat_reduce != "yes" ) {
-  	$qstat = simplexml_load_file("/tmp/$token.xml");
+  	$qstat = simplexml_load_file($tokenfile);
   }
   foreach ($qstat->xpath('//job_list') as $job_list) {
 	  if ($job_list->state != 'r') {
@@ -76,14 +78,13 @@ function show_run($qstat,$owner,$queue) {
 			  <td>$job_list->slots</td>
 			  </tr>";
   }
-  unlink($tokenFile);
   echo "</tbody></table><br><br>";
 
 }
 
 function show_pend($qstat,$owner,$queue) {
   global $qstat_reduce;
-  global $token;
+  global $tokenfile;
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
 		  <tr>
@@ -101,7 +102,7 @@ function show_pend($qstat,$owner,$queue) {
 		  <td>Slots</td>
 		  </tr>";
   if ($qstat_reduce != "yes" ) {
-  	$qstat = simplexml_load_file("/tmp/$token.xml");
+  	$qstat = simplexml_load_file($tokenfile);
   }
   foreach ($qstat->xpath('//job_list') as $job_list) {
 	  if ($job_list->state != 'qw') {
@@ -127,7 +128,6 @@ function show_pend($qstat,$owner,$queue) {
 			  <td>$job_list->slots</td>
 			  </tr>";
   }
-  unlink($tokenFile);
   echo "</tbody></table><br>";
 
 }
@@ -147,43 +147,43 @@ if ($qstat_reduce == "yes" ) {
 switch ($jobstat) {
     case "r":
         $jobstatflag="-s r";
-	if ($qstat_reduce != "yes" ) {
-        	$out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");   
-        	show_run("",$owner,$queue);
-		exec("rm /tmp/$token.xml");
-	} else {
-        	show_run($qstat,$owner,$queue);
-	}
+        if ($qstat_reduce != "yes" ) {
+            $out = exec("./gexml -u $owner $jobstatflag $queueflag -o $tokenfile");   
+            show_run("",$owner,$queue);
+            unlink($tokenfile);
+        } else {
+            show_run($qstat,$owner,$queue);
+        }
         break;
     case "p":
         $jobstatflag="-s p";
         if ($qstat_reduce != "yes" ) {
 	        $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
 	        show_pend("",$owner,$queue);
-		exec("rm /tmp/$token.xml");
-	} else {
-        	show_pend($qstat,$owner,$queue);
-	}
+            unlink($tokenfile);
+        } else {
+            show_pend($qstat,$owner,$queue);
+        }
         break;
     default:
         $jobstatflag="-s r";
-	if ($qstat_reduce != "yes" ) {
-	        $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
-	        show_run("",$owner,$queue);
-		exec("rm /tmp/$token.xml");
-	} else {
-	        show_run($qstat,$owner,$queue);
-	}
+        if ($qstat_reduce != "yes" ) {
+            $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
+            show_run("",$owner,$queue);
+            unlink($tokenfile);
+        } else {
+            show_run($qstat,$owner,$queue);
+        }
 
         $jobstatflag="-s p";
-	if ($qstat_reduce != "yes" ) {
-	        $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
-	        show_pend("",$owner,$queue);
-		exec("rm /tmp/$token.xml");
-	} else {
-        	show_pend($qstat,$owner,$queue);
-	}
-        break;
+        if ($qstat_reduce != "yes" ) {
+                $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
+                show_pend("",$owner,$queue);
+                unlink($tokenfile);
+        } else {
+                show_pend($qstat,$owner,$queue);
+        }
+    break;
 }
 
 ?>
