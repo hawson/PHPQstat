@@ -114,7 +114,7 @@ echo "	<table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=
        </tbody>
 	</table><br>";
 
-#unlink($tokenfile);
+unlink($tokenfile);
 ?>
 
 
