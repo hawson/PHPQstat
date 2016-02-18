@@ -2,7 +2,7 @@
 #set -xv
 # Exporting Environment Variables
 #########################################
-source /var/www/PHPQstat/phpqstat.conf
+source ./phpqstat.conf
 #########################################
 
 # check to see if another qinfo.sh is already running
@@ -22,7 +22,7 @@ touch /tmp/qinfo.run
 
 # check load average
 # get five minute load average and convert to decial
-if [ "${REMOTE_MASTER}" != "" ]; then
+if [ -n "${REMOTE_MASTER}" ]; then
 	LOAD_FIVE=$(snmpwalk -v 1 -r 1 -c public -O e ${REMOTE_MASTER} .1.3.6.1.4.1.2021.10 | gawk '$1 == "UCD-SNMP-MIB::laLoad.2" { print $4 }')
 	if [ "${LOAD_FIVE}" == "" ]; then
 		LOAD_FIVE="Not Available"

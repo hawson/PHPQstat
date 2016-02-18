@@ -65,6 +65,10 @@ function show_run($qstat,$owner,$queue) {
 	    continue;
 	  }
 	  $pe=$job_list->requested_pe['name'];
+
+      $queue = $job_list->queue_name;
+      $queue_display = preg_replace('/\.be-md.*$/', '', $queue);
+
 	  echo "          <tr>
 			  <td><a href=qstat_job.php?jobid=$job_list->JB_job_number&owner=$owner>$job_list->JB_job_number</a></td>
 			  <td><a href=qstat_user.php?owner=$job_list->JB_owner>$job_list->JB_owner</a></td>
@@ -72,13 +76,13 @@ function show_run($qstat,$owner,$queue) {
 			  <td>$job_list->JB_name</td>
 			  <td>$job_list->state</td>
 			  <td>$job_list->JB_project</td>
-			  <td><a href=qstat_user.php?queue=$job_list->queue_name&owner=$owner>$job_list->queue_name</a></td>
+			  <td><a href=qstat_user.php?queue=$queue&owner=$owner>$queue_display</a></td>
 			  <td>$job_list->JAT_start_time</td>
 			  <td>$pe</td>
 			  <td>$job_list->slots</td>
 			  </tr>";
   }
-  echo "</tbody></table><br><br>";
+  echo "</tbody></table><br><br>\n";
 
 }
 
