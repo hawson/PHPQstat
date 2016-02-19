@@ -34,6 +34,7 @@ echo "<tr><td><h1>PHPQstat</h1></td></tr>
                 <th>swap_used</th>
                 </tr>
 <?php
+
 if ($qstat_reduce != "yes") {
 
 	$password_length = 20;
@@ -55,8 +56,6 @@ if ($qstat_reduce != "yes") {
 	$qhost = simplexml_load_file("/tmp/qhost.xml");
 }
 
-// Add zabbix host URL info
-include_once("qzbix.php");
 
 #<host name='sge998.be-md.ncbi.nlm.nih.gov'>
 #0 <hostvalue name='arch_string'>lx-amd64</hostvalue>
@@ -72,6 +71,9 @@ include_once("qzbix.php");
 $metrics = array(0,1,5,6,7,8,9);
 
 
+// Add zabbix host URL info
+include_once("qzbix.php");
+
 $i=0;
 foreach ($qhost->host as $host) {
 	echo "<tr align='right'>";
@@ -79,11 +81,11 @@ foreach ($qhost->host as $host) {
 	$hostname=trim($host['name']);
 
     //  Add zabbix link
-	if ( ! empty($host_ids[$zbxhost]) ) {
-		$hostname = "<a href=\"$host_ids[$hostname]\">"."$hostname"."</a>";
+	if ( ! empty($host_ids[$hostname]) ) {
+		$hostname = "\t<a href=\"$host_ids[$hostname]\">$hostname</a>";
 	}
-
-	echo "          <td>$hostname</td>";
+    
+    echo "\t<td>$hostname </td>";
 
 	foreach ($metrics as $key) {
         $hostvalue = $host->hostvalue[$key];

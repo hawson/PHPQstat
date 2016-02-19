@@ -46,7 +46,7 @@ function show_run($qstat,$owner,$queue) {
 		  <td>State</td>
 		  <td>Project </td>
 		  <td>Queue </td>
-		  <td>Start Time</td>
+		  <td>Start Time (Zabbix Link)</td>
 		  <td>PE</td>
 		  <td>Slots</td>
 		  </tr>";
@@ -68,6 +68,20 @@ function show_run($qstat,$owner,$queue) {
 
       $queue = $job_list->queue_name;
       $queue_display = preg_replace('/\.be-md.*$/', '', $queue);
+// Add Zabbix Link
+	  include("qzbix.php");
+	  list($qname, $sgehost) = split("@", $job_list->queue_name);
+
+	  $fqdn = trim($sgehost);
+
+	  if ( isset($host_ids[$fqdn]) ) {
+		$job_starting_time="<a href=\"$host_ids[$fqdn]\">$job_list->JAT_start_time</a>";
+	  }
+	  else {
+		$job_starting_time = $job_list->JAT_start_time;
+	  }
+
+// END of Zabbix Link
 
 	  echo "          <tr>
 			  <td><a href=qstat_job.php?jobid=$job_list->JB_job_number&owner=$owner>$job_list->JB_job_number</a></td>
