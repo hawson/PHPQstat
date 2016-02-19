@@ -18,9 +18,9 @@ while ($row = $db_result->fetch_row() ) {
     $hostid = $row[1];
 
     $zbx_url ="https://zabbix.ncbi.nlm.nih.gov/misc/screens.php?form_refresh=1&elementid=18&hostid=".$hostid."&groupid=7";
-   $fqdn = "$row[0]".".be-md.ncbi.nlm.nih.gov";
+    $fqdn = "$row[0]".".be-md.ncbi.nlm.nih.gov";
 
-   $host_ids["$fqdn"] = $zbx_url;
+    $host_ids["$fqdn"] = $zbx_url;
 }
 
 //print_r($host_ids);
