@@ -55,6 +55,8 @@ if ($qstat_reduce != "yes") {
 	$qhost = simplexml_load_file("/tmp/qhost.xml");
 }
 
+// Add zabbix host URL info
+include_once("qzbix.php");
 
 #<host name='sge998.be-md.ncbi.nlm.nih.gov'>
 #0 <hostvalue name='arch_string'>lx-amd64</hostvalue>
@@ -74,8 +76,13 @@ $i=0;
 foreach ($qhost->host as $host) {
 	echo "<tr align='right'>";
     #echo "<!-- "; print_r($host); echo " -->";
+	$hostname=trim($host['name']);
 
-	$hostname=$host['name'];
+    //  Add zabbix link
+	if ( ! empty($host_ids[$zbxhost]) ) {
+		$hostname = "<a href=\"$host_ids[$hostname]\">"."$hostname"."</a>";
+	}
+
 	echo "          <td>$hostname</td>";
 
 	foreach ($metrics as $key) {
