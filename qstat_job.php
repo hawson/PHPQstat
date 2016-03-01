@@ -18,9 +18,9 @@ echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspa
 include("header.php");
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
       <tr><td CLASS=\"header\" align=center>
-      <a href=\"qstat.php?owner=$owner\">Queue status</a> * 
-      <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  
-      <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * 
+      <a href=\"qstat.php?owner=$owner\">Queue status</a> &bull;
+      <a href=\"qhost.php?owner=$owner\">Hosts status</a> &bull;
+      <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> &bull;
       <a href=\"about.php?owner=$owner\">About PHPQstat</a>
       </td></tr>";
 ?>
