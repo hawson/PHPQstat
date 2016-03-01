@@ -22,6 +22,22 @@ include_once('qzbix.php');
 $token = uniqid('phpqstat_');
 $tokenfile="/tmp/$token.xml";
 
+function clean_owner($owner) {
+    switch ($owner) {
+    case 'all':
+    case '*':
+    case '':
+    case !isset($owner):
+        $cleaned = '*';
+        break;
+    default:
+        $cleaned = "'$owner'";
+        break;
+    }
+    return $cleaned;
+    
+}
+
 function show_run($qstat,$owner,$queue) {
 
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
@@ -41,10 +57,7 @@ function show_run($qstat,$owner,$queue) {
 		  <td>Slots</td>
 		  </tr>";
   
-  if     ($owner == 'all') { $owner ='*'; }
-  elseif ($owner)          { $owner = "'$owner'"; }
-  else                     { $owner = '*'; }
-
+  $owner = clean_owner($owner);
   $queue = $queue ? "'$queue'" : '*';
 
   $xpath = "/job_info/queue_info/job_list[@state='running' and JB_owner=$owner and queue_name=$queue]";
@@ -103,10 +116,7 @@ function show_pend($qstat,$owner,$queue) {
 		  <td>Tasks</th>
 		  </tr>";
 
-  if     ($owner == 'all') { $owner ='*'; }
-  elseif ($owner)          { $owner = "'$owner'"; }
-  else                     { $owner = '*'; }
-
+  $owner = clean_owner($owner);
   $queue = $queue ? "'$queue'" : '*';
 
   # Note this is '/job_info/job_info' (repeated)!
