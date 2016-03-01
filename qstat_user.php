@@ -22,20 +22,7 @@ include_once('qzbix.php');
 $token = uniqid('phpqstat_');
 $tokenfile="/tmp/$token.xml";
 
-if ($qstat_reduce != "yes" ) {
-
-	$password_length = 20;
-	function make_seed() {
-	  list($usec, $sec) = explode(' ', microtime());
-	  return (float) $sec + ((float) $usec * 100000);
-	}
-
-	srand(make_seed());
-}
-
 function show_run($qstat,$owner,$queue) {
-  global $qstat_reduce;
-  global $tokenfile;
 
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
@@ -54,10 +41,6 @@ function show_run($qstat,$owner,$queue) {
 		  <td>Slots</td>
 		  </tr>";
   
-  #if ($qstat_reduce != "yes" ) {
-  #	$qstat = simplexml_load_file($tokenfile);
-  #}
-
   if     ($owner == 'all') { $owner ='*'; }
   elseif ($owner)          { $owner = "'$owner'"; }
   else                     { $owner = '*'; }
@@ -99,8 +82,7 @@ function show_run($qstat,$owner,$queue) {
 }
 
 function show_pend($qstat,$owner,$queue) {
-  global $qstat_reduce;
-  global $tokenfile;
+
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
 		  <tr>
@@ -117,9 +99,6 @@ function show_pend($qstat,$owner,$queue) {
 		  <td>PE</td>
 		  <td>Slots</td>
 		  </tr>";
-  if ($qstat_reduce != "yes" ) {
-  	$qstat = simplexml_load_file($tokenfile);
-  }
 
   if     ($owner == 'all') { $owner ='*'; }
   elseif ($owner)          { $owner = "'$owner'"; }
