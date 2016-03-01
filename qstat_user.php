@@ -11,9 +11,10 @@
 </head>
 
 <?php
-$owner  = array_key_exists('owner', $_GET) ? $_GET['owner'] : 'all';
+$owner   = isset($_GET['owner'])   ? $_GET['owner'] : 'all';
 $jobstat = isset($_GET['jobstat']) ? $_GET['jobstat'] : null ;
-$queue   = isset($_GET['queue']) ? $_GET['queue'] : null ;
+$queue   = isset($_GET['queue'])   ? $_GET['queue'] : null ;
+$job     = isset($_GET['job'])     ? $_GET['job'] : null ;
 
 include("header.php");
 include_once('qzbix.php');
@@ -168,7 +169,7 @@ echo '<tr><td align="center">';
 print "<form action=qstat_user.php method=get>\n
 User:  <input size=10 name=owner type=text value=\"$owner\"><input type=submit value='Enter'> &bull;
 Queue: <input size=10 name=queue type=text value=\"$queue\"><input type=submit value='Enter'> &bull;
-Job:   <input size=10 name=job   type=text value=\"$job\"><input type=submit value='Enter'></form> ";
+Job:   <input size=20 name=job   type=text value=\"$job\"><input type=submit value='Enter'></form> ";
 
 echo "</td></tr>";
 
@@ -180,6 +181,12 @@ if($jobstat){$jobstatflag="-s $jobstat";}else{$jobstatflag="";}
 
 if ($qstat_reduce == "yes" ) {
 	$qstat = simplexml_load_file("/tmp/qstat_all.xml");
+    if (!$qstat) {
+        print "</trd</tr>\n<h2>There was an error loading the XML output from SGE.  Please try again in about 30 seconds.</h2>";
+        include('bottom.php');
+        print("</tbody></table></body></html");
+    }
+
 }
 
 switch ($jobstat) {
@@ -234,9 +241,5 @@ include("bottom.php");
 ?>
   </tbody>
 </table>
-
-
-
 </body>
 </html>
-
