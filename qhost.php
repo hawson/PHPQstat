@@ -81,11 +81,9 @@ foreach ($qhost->host as $host) {
 	$hostname=trim($host['name']);
 
     //  Add zabbix link
-	if ( ! empty($host_ids[$hostname]) ) {
-		$hostname = "\t<a href=\"$host_ids[$hostname]\">$hostname</a>";
-	}
-    
-    echo "\t<td>$hostname </td>";
+    $zabbix_link = zabbix_link($hostname);
+
+    echo "\t<td>$hostname$zabbix_link</td>";
 
 	foreach ($metrics as $key) {
         $hostvalue = $host->hostvalue[$key];

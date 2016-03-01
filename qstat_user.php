@@ -16,6 +16,8 @@ $jobstat = isset($_GET['jobstat']) ? $_GET['jobstat'] : null ;
 $queue   = isset($_GET['queue']) ? $_GET['queue'] : null ;
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
 include("header.php");
+include_once('qzbix.php');
+
 
 $token = uniqid('phpqstat_');
 $tokenfile="/tmp/$token.xml";
@@ -34,6 +36,7 @@ if ($qstat_reduce != "yes" ) {
 function show_run($qstat,$owner,$queue) {
   global $qstat_reduce;
   global $tokenfile;
+
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
 		  <tr>
@@ -46,7 +49,7 @@ function show_run($qstat,$owner,$queue) {
 		  <td>State</td>
 		  <td>Project </td>
 		  <td>Queue </td>
-		  <td>Start Time (Zabbix Link)</td>
+		  <td>Start Time</td>
 		  <td>PE</td>
 		  <td>Slots</td>
 		  </tr>";
@@ -68,20 +71,14 @@ function show_run($qstat,$owner,$queue) {
 
       $queue = $job_list->queue_name;
       $queue_display = preg_replace('/\.be-md.*$/', '', $queue);
-// Add Zabbix Link
-	  include("qzbix.php");
+
 	  list($qname, $sgehost) = split("@", $job_list->queue_name);
 
-	  $fqdn = trim($sgehost);
+      // Add Zabbix Link
+      $zabbix_link = zabbix_link($sgehost);
+      // END of Zabbix Link
 
-	  if ( isset($host_ids[$fqdn]) ) {
-		$job_starting_time="<a href=\"$host_ids[$fqdn]\">$job_list->JAT_start_time</a>";
-	  }
-	  else {
-		$job_starting_time = $job_list->JAT_start_time;
-	  }
-
-// END of Zabbix Link
+      $qstat_user_link = '<a href="' . "qstat_user.php?queue=$queue&owner=$owner" . '">' . $queue_display . '</a>';
 
 	  echo "          <tr>
 			  <td><a href=qstat_job.php?jobid=$job_list->JB_job_number&owner=$owner>$job_list->JB_job_number</a></td>
@@ -90,7 +87,7 @@ function show_run($qstat,$owner,$queue) {
 			  <td>$job_list->JB_name</td>
 			  <td>$job_list->state</td>
 			  <td>$job_list->JB_project</td>
-			  <td><a href=qstat_user.php?queue=$queue&owner=$owner>$queue_display</a></td>
+			  <td>$qstat_user_link$zabbix_link</td>
 			  <td>$job_list->JAT_start_time</td>
 			  <td>$pe</td>
 			  <td>$job_list->slots</td>
