@@ -30,7 +30,7 @@ while ($row = $db_result->fetch_row() ) {
 # Builds returns bare URL for Zabbix host
 function zabbix_url ($host) {
     global $zabbix_ids;
-    return $zabbix_ids[$host];
+    return array_key_exists($host, $zabbix_ids) ? $zabbix_ids[$host] : false ;
 }
 
 # Builds HTML link for Zabbix URL
