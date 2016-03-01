@@ -14,10 +14,9 @@
 $owner  = array_key_exists('owner', $_GET) ? $_GET['owner'] : 'all';
 $jobstat = isset($_GET['jobstat']) ? $_GET['jobstat'] : null ;
 $queue   = isset($_GET['queue']) ? $_GET['queue'] : null ;
-echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
+
 include("header.php");
 include_once('qzbix.php');
-
 
 $token = uniqid('phpqstat_');
 $tokenfile="/tmp/$token.xml";
@@ -145,15 +144,29 @@ function show_pend($qstat,$owner,$queue) {
 
 }
 
+############################################################################################################
+
+echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
+
 
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
       <tr><td CLASS=\"header\" align=center>
-      <a href=\"qstat.php?owner=$owner\">Queue status</a> * 
-      <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  
-      <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * 
+      <a href=\"qstat.php?owner=$owner\">Queue status</a> &bull;
+      <a href=\"qhost.php?owner=$owner\">Hosts status</a> &bull;
+      <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> &bull;
       <a href=\"about.php?owner=$owner\">About PHPQstat</a>
-      </td></tr>
-      <tr><td><br>";
+      </td></tr>";
+
+echo '<tr><td align="center">';
+
+print "<form action=qstat_user.php method=get>\n
+User:  <input size=10 name=owner type=text value=\"$owner\"><input type=submit value='Enter'> &bull;
+Queue: <input size=10 name=queue type=text value=\"$queue\"><input type=submit value='Enter'> &bull;
+Job:   <input size=10 name=job   type=text value=\"$job\"><input type=submit value='Enter'></form> ";
+
+echo "</td></tr>";
+
+echo "<tr><td><br>";
 
 if($queue){$queueflag="-q $queue";}else{$queueflag="";}
 
