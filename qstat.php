@@ -59,7 +59,7 @@ if ($qstat_reduce != "yes" ) {
 	$qstat = simplexml_load_file("/tmp/qstat_queues.xml");
 }
 
-foreach ($qstat->xpath('//cluster_queue_summary') as $cluster_queue_summary) {
+foreach ($qstat->xpath('/job_info/cluster_queue_summary') as $cluster_queue_summary) {
 echo "                <tr>
                 <td><a href=qstat_user.php?owner=$owner&queue=$cluster_queue_summary->name>$cluster_queue_summary->name</a></td>
                 <td>$cluster_queue_summary->load</td>
