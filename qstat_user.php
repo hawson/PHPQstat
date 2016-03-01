@@ -30,7 +30,7 @@ function clean_owner($owner) {
         $cleaned = '*';
         break;
     default:
-        $cleaned = "'$owner'";
+        $cleaned = $owner;
         break;
     }
     return $cleaned;
@@ -56,11 +56,17 @@ function show_run($qstat,$owner,$queue) {
 		  <td>Slots</td>
 		  </tr>";
   
-  $owner = clean_owner($owner);
-  $queue_query = isset($queue) ? "and starts-with(queue_name, '$queue@')" : '';
+  $owner = clean_owner(trim($owner));
+  $queue = clean_owner(trim($queue));  //Works for both
 
-  $xpath = "/job_info/queue_info/job_list[@state='running' and JB_owner=$owner $queue_query]";
-  #print "\n\n$xpath\n\n";
+  $xpath_query = "@state='running'";
+
+  $xpath_query .= (empty($owner) or $owner == '*') ? '' : " and JB_owner='$owner'" ;
+  $xpath_query .= (empty($queue) or $queue == '*') ? '' : " and starts-with(queue_name, '$queue@')";
+
+
+  $xpath = "/job_info/queue_info/job_list[$xpath_query]";
+  #print "\n\n$xpath\n\nqueue=$queue owner=$owner";
   foreach ($qstat->xpath($xpath) as $job_list) {
 
 	  $pe=$job_list->granted_pe['name'];
