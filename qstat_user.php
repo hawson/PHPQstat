@@ -78,6 +78,7 @@ function show_run($qstat,$owner,$queue, $job) {
 		  <td>Slots</td>
 		  </tr>";
   
+<<<<<<< HEAD
   $owner = clean_owner(trim($owner));
   $queue = clean_owner(trim($queue));  //Works for both
 
@@ -90,6 +91,23 @@ function show_run($qstat,$owner,$queue, $job) {
 	  $pe=$job_list->granted_pe['name'];
 
       $slots = $pe ? $job_list->granted_pe : 1;
+=======
+  #if ($qstat_reduce != "yes" ) {
+  #	$qstat = simplexml_load_file($tokenfile);
+  #}
+
+  if     ($owner == 'all') { $owner ='*'; }
+  elseif ($owner)          { $owner = "'$owner'"; }
+  else                     { $owner = '*'; }
+
+  $queue = $queue ? "'$queue'" : '*';
+
+  $xpath = "/job_info/queue_info/job_list[@state='running' and JB_owner=$owner and queue_name=$queue]";
+  #print "\n\n$xpath\n\n";
+  foreach ($qstat->xpath($xpath) as $job_list) {
+
+	  $pe=$job_list->requested_pe['name'];
+>>>>>>> Use xpath for user filtering running jobs
 
       $queue = $job_list->queue_name;
       $queue_display = preg_replace('/\.be-md.*$/', '', $queue);
