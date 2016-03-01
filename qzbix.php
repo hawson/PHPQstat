@@ -7,7 +7,9 @@ $db_user = "zbx_hoster";
 $db_passcode = "info4bix";
 $db_name = "zabbix";
 
-$host_ids = array();  // Array the holds the result of the query
+$zabbix_icon = 'https://zabbix.ncbi.nlm.nih.gov/linux/images/general/zabbix.ico';
+
+$zabbix_ids = array();  // Stores mapping from hostname (both FQDN and shorname) to Zabbix link
 
 $conn = new mysqli($db_host, $db_user, $db_passcode, $db_name );
 
@@ -20,9 +22,30 @@ while ($row = $db_result->fetch_row() ) {
     $zbx_url = "https://zabbix.ncbi.nlm.nih.gov/misc/screens.php?form_refresh=1&elementid=18&hostid=$hostid&groupid=7";
     $fqdn = "$row[0].be-md.ncbi.nlm.nih.gov";
 
-    $host_ids[$fqdn] = $zbx_url;
-    $host_ids[$row[0]] = $zbx_url;
+    $zabbix_ids[$fqdn] = $zbx_url;
+    $zabbix_ids[$row[0]] = $zbx_url;
 }
 
-//print_r($host_ids);
+
+# Builds returns bare URL for Zabbix host
+function zabbix_url ($host) {
+    global $zabbix_ids;
+    return $zabbix_ids[$host];
+}
+
+# Builds HTML link for Zabbix URL
+function zabbix_link($host) {
+    global $zabbix_icon;
+    $url = zabbix_url($host);
+    if ($url) {
+        $link = '<a href="' . $url ."\"><img src=\"$zabbix_icon\"></a>";
+    } else {
+        $link = '';
+    }
+    #print "URL=$url host=$host link=$link\n\n";
+
+    return $link;
+}
+
+//print_r($zabbix_ids);
 ?>
