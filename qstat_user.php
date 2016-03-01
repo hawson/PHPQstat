@@ -38,7 +38,28 @@ function clean_owner($owner) {
     
 }
 
-function show_run($qstat,$owner,$queue) {
+function cont_job($str) {
+    return "contains(JB_name, '$str')";
+}
+
+function build_xpath_query($type, $owner, $queue, $job) {
+    $query = array( "@state='$type'" ) ;
+
+    $query[] = (empty($owner) or $owner == '*') ? '' : "JB_owner='$owner'" ;
+    $query[] = (empty($queue) or $queue == '*') ? '' : "starts-with(queue_name, '$queue@')";
+
+    # PHP is a horrible language.
+    if (!empty($job)) {
+        $job=trim($job);
+        $query[] = '(' . join(' or ', array_map( 'cont_job', preg_split('/\s+/', $job))) . ')';
+    } 
+
+    return join(' and ', preg_grep('/^\s*$/', $query, $flags=PREG_GREP_INVERT));
+
+}
+
+
+function show_run($qstat,$owner,$queue, $job) {
 
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
@@ -60,14 +81,10 @@ function show_run($qstat,$owner,$queue) {
   $owner = clean_owner(trim($owner));
   $queue = clean_owner(trim($queue));  //Works for both
 
-  $xpath_query = "@state='running'";
-
-  $xpath_query .= (empty($owner) or $owner == '*') ? '' : " and JB_owner='$owner'" ;
-  $xpath_query .= (empty($queue) or $queue == '*') ? '' : " and starts-with(queue_name, '$queue@')";
-
-
+  $xpath_query = build_xpath_query('running', $owner, $queue, $job);
   $xpath = "/job_info/queue_info/job_list[$xpath_query]";
-  #print "\n\n$xpath\n\nqueue=$queue owner=$owner";
+  #print "\n\n$xpath\n\n<br>queue=$queue owner=$owner job=$job";
+
   foreach ($qstat->xpath($xpath) as $job_list) {
 
 	  $pe=$job_list->granted_pe['name'];
@@ -104,7 +121,7 @@ function show_run($qstat,$owner,$queue) {
 
 }
 
-function show_pend($qstat,$owner,$queue) {
+function show_pend($qstat,$owner,$queue, $job) {
 
   echo "<table align=center width=95%xml border=\"1\" cellpadding=\"0\" cellspacing=\"0\">
 	  <tbody>
@@ -126,8 +143,11 @@ function show_pend($qstat,$owner,$queue) {
   $queue = $queue ? "'$queue'" : '*';
 
   # Note this is '/job_info/job_info' (repeated)!
-  $xpath = "/job_info/job_info/job_list[@state='pending' and JB_owner=$owner]";
+  #$xpath_query = "/job_info/job_info/job_list[@state='pending' and JB_owner=$owner]";
+  $xpath_query = build_xpath_query('pending', $owner, $queue, $job);
+  $xpath = "/job_info/job_info/job_list[$xpath_query]";
   #print "\n\n$xpath\n\n";
+
   foreach ($qstat->xpath($xpath) as $job_list) {
 
 	  $pe = $job_list->requested_pe['name'];
@@ -194,39 +214,39 @@ switch ($jobstat) {
         $jobstatflag="-s r";
         if ($qstat_reduce != "yes" ) {
             $out = exec("./gexml -u $owner $jobstatflag $queueflag -o $tokenfile");   
-            show_run("",$owner,$queue);
+            show_run("",$owner,$queue,$job);
             unlink($tokenfile);
         } else {
-            show_run($qstat,$owner,$queue);
+            show_run($qstat,$owner,$queue,$job);
         }
         break;
     case "p":
         $jobstatflag="-s p";
         if ($qstat_reduce != "yes" ) {
 	        $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
-	        show_pend("",$owner,$queue);
+	        show_pend("",$owner,$queue,$job);
             unlink($tokenfile);
         } else {
-            show_pend($qstat,$owner,$queue);
+            show_pend($qstat,$owner,$queue,$job);
         }
         break;
     default:
         $jobstatflag="-s r";
         if ($qstat_reduce != "yes" ) {
             $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
-            show_run("",$owner,$queue);
+            show_run("",$owner,$queue,$job);
             unlink($tokenfile);
         } else {
-            show_run($qstat,$owner,$queue);
+            show_run($qstat,$owner,$queue,$job);
         }
 
         $jobstatflag="-s p";
         if ($qstat_reduce != "yes" ) {
                 $out = exec("./gexml -u $owner $jobstatflag $queueflag -o /tmp/$token.xml");
-                show_pend("",$owner,$queue);
+                show_pend("",$owner,$queue,$job);
                 unlink($tokenfile);
         } else {
-                show_pend($qstat,$owner,$queue);
+                show_pend($qstat,$owner,$queue,$job);
         }
     break;
 }
