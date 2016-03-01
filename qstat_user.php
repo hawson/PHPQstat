@@ -11,7 +11,7 @@
 </head>
 
 <?php
-$owner  = $_GET['owner'];
+$owner  = array_key_exists('owner', $_GET) ? $_GET['owner'] : 'all';
 $jobstat = isset($_GET['jobstat']) ? $_GET['jobstat'] : null ;
 $queue   = isset($_GET['queue']) ? $_GET['queue'] : null ;
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
