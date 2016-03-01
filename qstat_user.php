@@ -51,7 +51,9 @@ function show_run($qstat,$owner,$queue) {
   #print "\n\n$xpath\n\n";
   foreach ($qstat->xpath($xpath) as $job_list) {
 
-	  $pe=$job_list->requested_pe['name'];
+	  $pe=$job_list->granted_pe['name'];
+
+      $slots = $pe ? $job_list->granted_pe : 1;
 
       $queue = $job_list->queue_name;
       $queue_display = preg_replace('/\.be-md.*$/', '', $queue);
@@ -63,6 +65,8 @@ function show_run($qstat,$owner,$queue) {
       // END of Zabbix Link
 
       $qstat_user_link = '<a href="' . "qstat_user.php?queue=$queue&owner=$owner" . '">' . $queue_display . '</a>';
+      $job_number = $job_list->JB_job_number;
+
 
 	  echo "          <tr>
 			  <td><a href=qstat_job.php?jobid=$job_list->JB_job_number&owner=$owner>$job_list->JB_job_number</a></td>
@@ -74,7 +78,7 @@ function show_run($qstat,$owner,$queue) {
 			  <td>$qstat_user_link$zabbix_link</td>
 			  <td>$job_list->JAT_start_time</td>
 			  <td>$pe</td>
-			  <td>$job_list->slots</td>
+			  <td>$slots</td>
 			  </tr>";
   }
   echo "</tbody></table><br><br>\n";
@@ -94,10 +98,9 @@ function show_pend($qstat,$owner,$queue) {
 		  <td>Name</td>
 		  <td>State</td>
 		  <td>Project </td>
-		  <td>Queue </td>
-		  <td>Submission Time</td>
-		  <td>PE</td>
-		  <td>Slots</td>
+		  <td>Submission Time</th>
+		  <td>PE</th>
+		  <td>Tasks</th>
 		  </tr>";
 
   if     ($owner == 'all') { $owner ='*'; }
@@ -111,7 +114,11 @@ function show_pend($qstat,$owner,$queue) {
   #print "\n\n$xpath\n\n";
   foreach ($qstat->xpath($xpath) as $job_list) {
 
-	  $pe=$job_list->requested_pe['name'];
+	  $pe = $job_list->requested_pe['name'];
+      if ($pe) { $pe .= ':' . $job_list->requested_pe; }
+
+      $tasks = $job_list->tasks ? $job_list->tasks : 1;
+
 	  echo "          <tr>
 			  <td><a href=qstat_job.php?jobid=$job_list->JB_job_number&owner=$owner>$job_list->JB_job_number</a></td>
 			  <td><a href=qstat_user.php?owner=$job_list->JB_owner>$job_list->JB_owner</a></td>
@@ -119,10 +126,9 @@ function show_pend($qstat,$owner,$queue) {
 			  <td>$job_list->JB_name</td>
 			  <td>$job_list->state</td>
 			  <td>$job_list->JB_project</td>
-			  <td><a href=qstat_user.php?queue=$job_list->queue_name&owner=$owner>$job_list->queue_name</a></td>
 			  <td>$job_list->JB_submission_time</td>
 			  <td>$pe</td>
-			  <td>$job_list->slots</td>
+			  <td align='right'>$tasks</td>
 			  </tr>";
   }
   echo "</tbody></table><br>";
