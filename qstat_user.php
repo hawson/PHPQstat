@@ -120,16 +120,18 @@ function show_pend($qstat,$owner,$queue) {
   if ($qstat_reduce != "yes" ) {
   	$qstat = simplexml_load_file($tokenfile);
   }
-  foreach ($qstat->xpath('//job_list') as $job_list) {
-	  if ($job_list->state != 'qw') {
-	    continue;
-	  }
-	  if ($owner != "all" && $job_list->JB_owner != $owner) {
-	    continue;
-	  }
-	  if ($queue != "" && $job_list->queue_name != $queue) {
-	    continue;
-	  }
+
+  if     ($owner == 'all') { $owner ='*'; }
+  elseif ($owner)          { $owner = "'$owner'"; }
+  else                     { $owner = '*'; }
+
+  $queue = $queue ? "'$queue'" : '*';
+
+  # Note this is '/job_info/job_info' (repeated)!
+  $xpath = "/job_info/job_info/job_list[@state='pending' and JB_owner=$owner]";
+  #print "\n\n$xpath\n\n";
+  foreach ($qstat->xpath($xpath) as $job_list) {
+
 	  $pe=$job_list->requested_pe['name'];
 	  echo "          <tr>
 			  <td><a href=qstat_job.php?jobid=$job_list->JB_job_number&owner=$owner>$job_list->JB_job_number</a></td>
