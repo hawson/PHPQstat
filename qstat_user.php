@@ -54,19 +54,20 @@ function show_run($qstat,$owner,$queue) {
 		  <td>Slots</td>
 		  </tr>";
   
-  if ($qstat_reduce != "yes" ) {
-  	$qstat = simplexml_load_file($tokenfile);
-  }
-  foreach ($qstat->xpath('//job_list') as $job_list) {
-	  if ($job_list->state != 'r') {
-	    continue;
-	  }
-	  if ($owner != "all" && $job_list->JB_owner != $owner) {
-	    continue;
-	  }
-	  if ($queue != "" && $job_list->queue_name != $queue) {
-	    continue;
-	  }
+  #if ($qstat_reduce != "yes" ) {
+  #	$qstat = simplexml_load_file($tokenfile);
+  #}
+
+  if     ($owner == 'all') { $owner ='*'; }
+  elseif ($owner)          { $owner = "'$owner'"; }
+  else                     { $owner = '*'; }
+
+  $queue = $queue ? "'$queue'" : '*';
+
+  $xpath = "/job_info/queue_info/job_list[@state='running' and JB_owner=$owner and queue_name=$queue]";
+  #print "\n\n$xpath\n\n";
+  foreach ($qstat->xpath($xpath) as $job_list) {
+
 	  $pe=$job_list->requested_pe['name'];
 
       $queue = $job_list->queue_name;
@@ -149,7 +150,14 @@ function show_pend($qstat,$owner,$queue) {
 
 
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
-      <tr><td CLASS=\"header\" align=center><a href='index.php'>Home</a> *  <a href=\"qhost.php?owner=$owner\">Hosts status</a> *  <a href=\"qstat.php?owner=$owner\">Queue status</a> * <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> * <a href=\"about.php?owner=$owner\">About PHPQstat</a></td></tr><tr><td><br>";
+      <tr>
+      <td CLASS=\"header\" align=center><a href='index.php'>Home</a> 
+      * <a href=\"qhost.php?owner=$owner\">Hosts status</a> 
+      * <a href=\"qstat.php?owner=$owner\">Queue status</a> 
+      * <a href=\"qstat_user.php?owner=$owner\">Jobs status ($owner)</a> 
+      * <a href=\"about.php?owner=$owner\">About PHPQstat</a></td>
+      </tr>
+      <tr><td><br>";
 
 if($queue){$queueflag="-q $queue";}else{$queueflag="";}
 
