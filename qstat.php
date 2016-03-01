@@ -13,7 +13,7 @@
 <body>
 
 <?php
-$owner  = $_GET['owner'];
+$owner  = array_key_exists('owner', $_GET) ? $_GET['owner'] : 'all';
 echo "<body><table align=center width=95% border=\"1\" cellpadding=\"0\" cellspacing=\"0\"><tbody>";
 include("header.php");
 echo "<tr><td><h1>PHPQstat</h1></td></tr>
