@@ -58,9 +58,9 @@ function show_run($qstat,$owner,$queue) {
 		  </tr>";
   
   $owner = clean_owner($owner);
-  $queue = $queue ? "'$queue'" : '*';
+  $queue_query = isset($queue) ? "and starts-with(queue_name, '$queue@')" : '';
 
-  $xpath = "/job_info/queue_info/job_list[@state='running' and JB_owner=$owner and queue_name=$queue]";
+  $xpath = "/job_info/queue_info/job_list[@state='running' and JB_owner=$owner $queue_query]";
   #print "\n\n$xpath\n\n";
   foreach ($qstat->xpath($xpath) as $job_list) {
 
