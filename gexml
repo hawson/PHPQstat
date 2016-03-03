@@ -10,42 +10,42 @@ while getopts RMfh:g:u:o:e:s:j:q: OPTION
 do
     case $OPTION in
       s) state=$OPTARG
-	 stateopt="-s $state"
-      ;;
+         stateopt="-s $state"
+         ;;
 
       g) group=$OPTARG
          groupopt="-u $group*"
-	 ;;
-	 
+         ;;
+         
       u) user=$OPTARG
          if [ $user == "all" ]; then
-	  user="*"
-	  useropt="-u"
-	 else
+          user="*"
+          useropt="-u"
+         else
           group=$(id -gn $user)
           useropt="-u"
-	 fi
-	 ;;
+         fi
+         ;;
       o) out=$OPTARG
-	 ;;
+         ;;
       e) error=$OPTARG
          erroropt="-explain $error"
-	 ;;
+         ;;
       j) jobid=$OPTARG
          jobidopt="-j $jobid"
-	 ;;
+         ;;
       q) queue=$OPTARG
-	 queueopt="-q $queue"
+         queueopt="-q $queue"
       ;;
-	 
+         
       R) sw_R="-g c" #queues status
-	 ;;
-	 
+         ;;
+         
       M) sw_M=1
-	 ;;
-	 
+         ;;
+         
       f) sw_f="-f"
-	 ;;
+         ;;
 
       h) help $tipus_usuari ;;
 
@@ -53,7 +53,16 @@ do
     esac
 done
 
+NEWTMPFILE=`mktemp`
+qstat -xml -ext -t -r $stateopt $queueopt $sw_R $sw_f $groupopt $useropt "$user" $erroropt $jobidopt > $NEWTMPFILE
 
-qstat -xml -ext -t -r $stateopt $queueopt $sw_R $sw_f $groupopt $useropt "$user" $erroropt $jobidopt > $out
+# overwrite the XML cache only if qstat returned successfully
+if [ "$?" == 0 ]; then
+    mv -f $NEWTMPFILE $out
+fi
+
+if [ -e $NEWTMPFILE ]; then
+    rm -f $NEWTMPFILE
+fi
 
 exit
